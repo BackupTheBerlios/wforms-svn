@@ -1,0 +1,1 @@
+java -jar custom_rhino.jar -c ../wforms.js > ../wforms_pack.js 2>&1
