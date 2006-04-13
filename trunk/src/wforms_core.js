@@ -1,12 +1,5 @@
 
-wForms.NAME = "wForms";
-wForms.VERSION = "2.01.beta";
-wForms.__repr__ = function () {
-	return "[" + this.NAME + " " + this.VERSION + "]";
-};
-wForms.toString = function () {
-	return this.__repr__();
-};
+
 
 function wHELPERS() {};
 
@@ -257,7 +250,7 @@ var Fat = {
   if(wHELPERS) {
 	  var wFORMS = { 
 	  
-		  debugLevel     : 0, /* 0: Inactive, 1+: Debug Level */
+	  debugLevel     : 0, /* 0: Inactive, 1+: Debug Level */
 	  
 	  helpers        : new wHELPERS(),     
 	  behaviors      : {},
@@ -286,11 +279,13 @@ var Fat = {
 		
 		 // Process element nodes only
 		 if(node.nodeType == 1) { 
+			  wFORMS.debug(node.tagName + ' ' + node.id);
 			  for(var behaviorName in wFORMS.behaviors) {
 				  wFORMS.behaviors[behaviorName].evaluate(node);
 			  }
 			  if(deep) {
-				  for (var i=node.childNodes.length-1; i>=0; i--) {
+			  	  var l=node.childNodes.length;
+				  for (var i=0; i<l; i++) {
 					 wFORMS.addBehaviors(node.childNodes[i]);
 				  }
 			  }
@@ -348,6 +343,16 @@ var Fat = {
 			wFORMS.debugOutput.ondblclick = function() { this.innerHTML = '' };
 	}
   };
+ 
+ 
+wFORMS.NAME     = "wForms";
+wFORMS.VERSION  = "2.01.beta";
+wFORMS.__repr__ = function () {
+	return "[" + this.NAME + " " + this.VERSION + "]";
+};
+wFORMS.toString = function () {
+	return this.__repr__();
+};
  
   // For backward compatibility
   wFORMS.utilities = wFORMS.helpers;

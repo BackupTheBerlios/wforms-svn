@@ -15,7 +15,7 @@
 
 	var file = FileSystem.openTextFile(srcDir + "/wforms_core.js", 1, -2);
 	var source = file.readAll();
-	var VERSION = source.match(/wForms.VERSION \= \"(.*)\"/)[1];
+	var VERSION = source.match(/wFORMS.VERSION \= \"(.*)\"/)[1];
 	file.close();
 	source = null;
 

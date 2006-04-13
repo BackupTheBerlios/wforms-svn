@@ -1,0 +1,57 @@
+<html>
+<head>
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>
+   <script type="text/javascript" src="../src/wforms_paging.js" ></script>
+   <script type="text/javascript" src="../src/wforms_paging_navigation.js" ></script>   
+   <script type="text/javascript" src="../src/wforms_validation.js" ></script>
+   <style type='text/css'>
+
+	#wfNav ul {
+		margin: 4px;
+		padding: 3px 3px 15px 3px;
+		text-align: left;
+		font-family: Verdana, Arial, Sans-Serif;
+		color: #C0C0C0;
+		overflow: auto;
+	}
+	#wfNav ul li {
+		list-style: none;
+		float: left;
+		padding: 0 3px;
+	}
+	#wfNav ul.wfPageNavigationCurrent {
+		color: #800080;
+	}
+
+</style>
+</head>
+<body>
+	<form id="form1">
+		<!--This wfPagingNavigation class designates the container for navigation elements and its presence on the page triggers the navigation behaviour.-->
+		<div id="wfNav" class='wfPagingNavigation'></div>
+		<!--Navigation elements will be generated for each wfPage that has a title attribute.-->
+		<!--The first page must have a title.-->
+		<div class="wfPage" id="wfPgIndex-1" title="step one | set weight">
+			<h2>Weight of item</h2>
+			<label for="weight">Weight</label> <input name="weight" type="text" />
+		</div>
+		<div class="wfPage" id="wfPgIndex-2" title="step two | set size">
+			<h2>Size of item</h2>
+			
+			<label for="size">Size</label> <input name="size" type="text" />
+		</div>
+		<!--Third page is considered to be part of the second step, so doesn't have a title.-->
+		<div class="wfPage" id="wfPgIndex-3">
+			<h2>Size of item: details</h2>
+			<label for="size-details">Details of size</label> <textarea name="size-details"></textarea>
+		</div>
+		<div class="wfPage" id="wfPgIndex-4" title="step three | set age">
+			<h2>Age of item</h2>
+			<label for="age">Age</label> <input name="age" type="text" />
+			<input type="submit" value="submit" />
+		</div>
+	</form>
+</body>
+</html>

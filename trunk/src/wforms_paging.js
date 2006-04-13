@@ -15,8 +15,8 @@
 		wFORMS.runValidationOnPageNext   	= true;
 		
 		if(!wFORMS.arrMsg) wFORMS.arrMsg 	= new Array();
-		wFORMS.arrMsg[4] 					= "Next Page";
-		wFORMS.arrMsg[5] 					= "Previous Page";	
+		wFORMS.arrMsg[4] 					= "Next Page";      //arrMsg[4] for backward compatibility
+		wFORMS.arrMsg[5] 					= "Previous Page";	//arrMsg[5] for backward compatibility
 
 
 		wFORMS.behaviors['paging'] = {
@@ -190,6 +190,8 @@
 
 				// Show the page
 				pageElement.className += ' ' + wFORMS.className_pagingCurrent;
+				
+				// TO-DO: trigger onPageChange event ?
 			},
 			// ------------------------------------------------------------------------------------------
 			// getFormElement
@@ -201,7 +203,7 @@
 				return form;
 			},
 			// ------------------------------------------------------------------------------------------
-			// getFormElement
+			// getPageIndex
 			// ------------------------------------------------------------------------------------------									
 			getPageIndex: function(element) {
 				if(element && element.id) 
