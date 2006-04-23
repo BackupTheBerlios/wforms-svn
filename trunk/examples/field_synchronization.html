@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>wForms 2.0 Example</title>
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>  
+   <!-- This example & Sync behavior thanks to recidive.com -->
+   <script type="text/javascript" src="../src/wforms_sync.js" ></script>
+</head>
+<body>
+<form method="post" action="" name="Application Form - Initial Issue" id="wf_ApplicationForm-I">
+  <h2>Sync Behavior Test</h2>
+  <fieldset id="fieldset0" class="required">
+    <legend>Checkbox - Checkboxes</legend>
+    <div class="instructions">Click in the first checkbox to change the state of the two others</div>
+
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="other sync-a another" id="checkbox1" name="checkbox1"/>
+      <label for="checkbox1" class="postField">Source Choice</label>
+    </span>
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="other target-a another" id="checkbox2" name="checkbox2"/>
+      <label for="checkbox2" class="postField">Target Choice 1</label>
+    </span>
+
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="aother target-a another" id="checkbox3" name="checkbox3"/>
+      <label for="checkbox3" class="postField">Target Choice 2</label>
+    </span>
+    <br/>
+  </fieldset>
+  <fieldset id="fieldset1" class="required">
+    <legend>Text Input - Text Inputs</legend>
+
+    <div class="instructions">The value of the first field is set for the two others while typing</div>
+    <span class="label preField">(value mode)</span>
+    <label for="text1" class="preField">Source Text</label>
+    <input type="text" id="text1" name="text1" value="" size="" class="sync-b"/>
+    <br/>
+    <label for="text2" class="preField">Target Text 1</label>
+    <input type="text" id="text2" name="text2" value="" size="" class="target-b"/>
+
+    <br/>
+    <label for="text3" class="preField">Target Text 2</label>
+    <input type="text" id="text3" name="text3" value="" size="" class="target-b"/>
+    <br/>
+  </fieldset>
+  <fieldset id="fieldset2" class="required">
+    <legend>Select - Radios</legend>
+    <div class="instructions">Changing the select will change the radios</div>
+
+    <select id="select1" name="select1">
+	  <option class="other sync-c another" value="yes">Source Choice 1</option>
+	  <option class="other sync-d another" value="yes">Source Choice 2</option>
+	  <option class="other sync-e another" value="yes">Source Choice 3</option>
+	</select>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="other target-c another" id="radio1" name="radio1"/>
+
+      <label for="radio1" class="postField">Target Choice 1</label>
+    </span>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="other target-d another" id="radio2" name="radio1"/>
+      <label for="radio2" class="postField">Target Choice 2</label>
+    </span>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="other target-e another" id="radio3" name="radio1"/>
+
+      <label for="radio3" class="postField">Target Choice 3</label>
+    </span>
+    <br/>
+  </fieldset>
+  <fieldset id="fieldset2" class="required">
+    <legend>Checkboxes - Multiple Select</legend>
+    <div class="instructions">Click on the checkboxes to select their correspondents in the multiple select</div>
+
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="other sync-f another" id="checkbox7" name="checkbox7"/>
+      <label for="checkbox7" class="postField">Source Choice 1</label>
+    </span>
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="other sync-g another" id="checkbox8" name="checkbox8"/>
+      <label for="checkbox8" class="postField">Source Choice 2</label>
+    </span>
+
+    <span class="oneChoice">
+      <input type="checkbox" value="yes" class="other sync-h another" id="checkbox9" name="checkbox9"/>
+      <label for="checkbox9" class="postField">Source Choice 3</label>
+    </span>
+    <select id="select1" name="select1" multiple="multiple">
+	  <option class="other target-f another" value="yes">Target Choice 1</option>
+	  <option class="other target-g another" value="yes">Target Choice 2</option>
+
+	  <option class="other target-h another" value="yes">Target Choice 3</option>
+	</select>
+    <br/>
+  </fieldset>
+  <fieldset id="fieldset1" class="required">
+    <legend>Button Input - Text Input</legend>
+    <div class="instructions">The value of the button is set for the text input when the button is clicked</div>
+
+    <span class="label preField">(value mode)</span>
+    <label for="button1" class="preField">Source Button</label>
+    <input type="button" id="button1" name="button1" value="This is the value" size="" class="sync-i"/>
+    <br/>
+    <label for="text4" class="preField">Target Text</label>
+    <input type="text" id="text4" name="text4" value="" size="" class="target-i"/>
+    <br/>
+
+    <br/>
+  </fieldset>
+  <input type="submit" disabled="disabled" class="primaryAction" value="submit"/>
+</form>
+</body>
+</html>

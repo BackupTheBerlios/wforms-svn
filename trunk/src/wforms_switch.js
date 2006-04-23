@@ -38,8 +38,9 @@
 					for(var i=0; i < switchNames.length; i++) {
 						if(!wFORMS.switchTriggers[switchNames[i]]) 
 							wFORMS.switchTriggers[switchNames[i]] = new Array();
-						wFORMS.switchTriggers[switchNames[i]].push(node.id);
-						//wFORMS.debug('switch/evaluate: [trigger] '+ switchNames[i],3);
+						if(!wFORMS.switchTriggers[switchNames[i]][node.id])
+							wFORMS.switchTriggers[switchNames[i]].push(node.id);
+						//wFORMS.debug('switch/evaluate: [trigger] '+ switchNames[i] + ' ' + node.id,3);
 					}
 
 					switch(node.tagName.toUpperCase()) {
@@ -102,6 +103,7 @@
 					for(var i=0; i < switchNames.length; i++) {
 						if(!wFORMS.switchTargets[switchNames[i]]) 
 							wFORMS.switchTargets[switchNames[i]] = new Array();
+						if(!wFORMS.switchTargets[switchNames[i]][node.id]) 
 						wFORMS.switchTargets[switchNames[i]].push(node.id);
 						//wFORMS.debug('switch/evaluate: [target] '+ switchNames[i],3);
 					}										
@@ -230,11 +232,13 @@
            },
 
 		   // ------------------------------------------------------------------------------------------
-           // remove: executed if the behavior should not be applied anymore
+           // clear: executed if the behavior should not be applied anymore
 		   // ------------------------------------------------------------------------------------------
-		   remove: function(e) {
-               var element   = wFORMS.helpers.getSourceElement(e);
-			  //wFORMS.debug('switch/remove: ' + element.id , 5);				   
+		   clear: function(e) {
+             	// @TODO: go through wFORMS.switchTriggers to remove events.
+             	wFORMS.switchTriggers = {};		
+             	wFORMS.switchTargets = {};
+             	
            },
 		   
 		   

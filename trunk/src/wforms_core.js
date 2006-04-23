@@ -1,4 +1,11 @@
-
+wFORMS.NAME     = "wForms";
+wFORMS.VERSION  = "2.01beta";
+wFORMS.__repr__ = function () {
+	return "[" + this.NAME + " " + this.VERSION + "]";
+};
+wFORMS.toString = function () {
+	return this.__repr__();
+};
 
 
 function wHELPERS() {};
@@ -26,8 +33,10 @@ wHELPERS.prototype.addEvent = function(obj, type, fn) {
 
 wHELPERS.prototype.removeEvent = function(obj, type, fn) {
 	if (obj.detachEvent) {
-		obj.detachEvent( 'on'+type, obj[type+fn] );
-		obj[type+fn] = null;
+		if(obj[type+fn]) {
+			obj.detachEvent( 'on'+type, obj[type+fn] );
+			obj[type+fn] = null;
+		}
 	} else if(obj.removeEventListener)
 		obj.removeEventListener( type, fn, false );
 	else {
@@ -255,6 +264,7 @@ var Fat = {
 	  helpers        : new wHELPERS(),     
 	  behaviors      : {},
 	  onLoadComplete : new Array(),  /* stack of functions to call once all behaviors have been applied */
+		  processedForm  : null,
 	  
 	  onLoadHandler  : function() {
 		  for(var behaviorName in  wFORMS.behaviors) {
@@ -263,6 +273,7 @@ var Fat = {
 		 
 		  for (var i=0;i<document.forms.length;i++) {
 			  wFORMS.debug('wForms/initialize: '+ (document.forms[i].name || document.forms[i].id) );
+			  	wFORMS.processedForm = document.forms[i];
 			  wFORMS.addBehaviors(document.forms[i]);
 		  }
 	  },
@@ -276,6 +287,17 @@ var Fat = {
 			 // (typeof not used for IE5/mac compatibility)
 			 node = document.getElementById(node);
 		 }
+			if(!node || node.nodeType!=1) return;
+			
+			deep=(arguments.length>1)?arguments[1]:true;	
+				    	    	
+			wFORMS._addBehaviors(node, deep);					
+		  },
+		  
+		  _addBehaviors : function (node, deep) {
+			  if(node.getAttribute('rel')=='no-behavior') {
+			  	return false;
+			  }
 		
 		 // Process element nodes only
 		 if(node.nodeType == 1) { 
@@ -283,15 +305,16 @@ var Fat = {
 			  for(var behaviorName in wFORMS.behaviors) {
 				  wFORMS.behaviors[behaviorName].evaluate(node);
 			  }
+			 
 			  if(deep) {
-			  	  var l=node.childNodes.length;
-				  for (var i=0; i<l; i++) {
-					 wFORMS.addBehaviors(node.childNodes[i]);
+				  for (var i=node.childNodes.length-1, cn=node.childNodes; i>=0; i--) {
+				  	 if(cn[i].nodeType==1)
+					 	wFORMS._addBehaviors(cn[i], deep);
 				  }
 			  }
 			  
 			  if(node.tagName.toUpperCase() == 'FORM') {
-				  wFORMS.debug('wForms/processed: ' + node.id);
+				  // wFORMS.debug('wForms/processed: ' + node.id);
 				  // run the init stack
 				  for (var i=0;i<wFORMS.onLoadComplete.length;i++) {
 					  wFORMS.onLoadComplete[i]();
@@ -344,15 +367,6 @@ var Fat = {
 	}
   };
  
- 
-wFORMS.NAME     = "wForms";
-wFORMS.VERSION  = "2.01.beta";
-wFORMS.__repr__ = function () {
-	return "[" + this.NAME + " " + this.VERSION + "]";
-};
-wFORMS.toString = function () {
-	return this.__repr__();
-};
  
   // For backward compatibility
   wFORMS.utilities = wFORMS.helpers;

@@ -16,25 +16,25 @@ if(wFORMS) {
            
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
            evaluate: function(node) {
-               if(node.id || node.name) {
-				   
-                   // try with the id first
-                   var fieldHint = document.getElementById(node.id   + wFORMS.idSuffix_fieldHint);
-                   if(!fieldHint)
-                       // try again with the name
-                       fieldHint = document.getElementById(node.name + wFORMS.idSuffix_fieldHint); 
-                   if(fieldHint) {
+               if(node.id) {
+               	   if(node.id.indexOf(wFORMS.idSuffix_fieldHint)>0) {               	   
+               	     // this looks like a field-hint. See if we have a matching field.               	    
+               	     // try first with the id, then with the name attribute.
+               	     var id     = node.id.replace(wFORMS.idSuffix_fieldHint, '');               	     
+               	     var hinted = document.getElementById(id) || wFORMS.processedForm[id];
+               	   } 
+                   if(hinted) {
 					  // wFORMS.debug('hint/evaluate: '+ (node.id || node.name));
-					   switch(node.tagName.toUpperCase()) {
+					   switch(hinted.tagName.toUpperCase()) {
 						   case 'SELECT': 
 						   case 'TEXTAREA':						   
 						   case 'INPUT':
-		                       	wFORMS.helpers.addEvent(node,'focus',wFORMS.behaviors['hint'].run);
-    		                   	wFORMS.helpers.addEvent(node,'blur' ,wFORMS.behaviors['hint'].remove);
+		                       	wFORMS.helpers.addEvent(hinted,'focus',wFORMS.behaviors['hint'].run);
+    		                   	wFORMS.helpers.addEvent(hinted,'blur' ,wFORMS.behaviors['hint'].remove);
 							   	break;
 						   default:
-						  	 	wFORMS.helpers.addEvent(node,'mouseover',wFORMS.behaviors['hint'].run);
-								wFORMS.helpers.addEvent(node,'mouseout' ,wFORMS.behaviors['hint'].remove);
+						  	 	wFORMS.helpers.addEvent(hinted,'mouseover',wFORMS.behaviors['hint'].run);
+								wFORMS.helpers.addEvent(hinted,'mouseout' ,wFORMS.behaviors['hint'].remove);
 						  		break;
 					   }
                    } 
