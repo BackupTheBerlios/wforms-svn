@@ -21,7 +21,11 @@
 
 		wFORMS.behaviors['paging'] = {
 
-			onPageChange : null, /* Function to run when the clicking page next/previous */
+			idSuffix_buttonsPlaceholder: "-buttons",
+			className_pageNextButton: wFORMS.className_pagingButtons + " wfPageNextButton",
+			className_pagePreviousButton: wFORMS.className_pagingButtons + " wfPagePreviousButton",			
+			
+			onPageChange : null, /* Function to run when the page is changed */
 
 			// ------------------------------------------------------------------------------------------
 			// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
@@ -31,14 +35,10 @@
 					
 					var currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(node);
 					if(currentPageIndex > 1) {
-						// add previous page button			
-						var actionNode = document.createElement("input"); 
-						actionNode.setAttribute('value',wFORMS.arrMsg[5]);	
-						actionNode.setAttribute('type',"button");	
-						actionNode.className = wFORMS.className_pagingButtons;
-						node.appendChild(actionNode);
-						// Add event handler			
-						wFORMS.helpers.addEvent(actionNode,'click',wFORMS.behaviors['paging'].pagingPrevious);			
+						// add previous page button	
+						var placeholder = this.getButtonPlaceholder(node);
+						var button = placeholder.insertBefore(this.createPreviousPageButton(),placeholder.firstChild);						
+						wFORMS.helpers.addEvent(button,'click',wFORMS.behaviors['paging'].pagingPrevious);									
 					} else {
 						// set current page class
 						node.className += ' ' + wFORMS.className_pagingCurrent;
@@ -57,19 +57,37 @@
 						
 					}
 					if(document.getElementById(wFORMS.idPrefix_pageIndex+(currentPageIndex+1).toString())) {
-						// add next page button			
-						var actionNode = document.createElement("input"); 
-						actionNode.setAttribute('value',wFORMS.arrMsg[4]);	
-						actionNode.setAttribute('type',"button");	
-						actionNode.className = wFORMS.className_pagingButtons;
-						node.appendChild(actionNode);
-						// Add event handler			
-						wFORMS.helpers.addEvent(actionNode,'click',wFORMS.behaviors['paging'].pagingNext);			
+						// add next page button	
+						var placeholder = this.getButtonPlaceholder(node);
+						var button = placeholder.appendChild(this.createNextPageButton());
+						wFORMS.helpers.addEvent(button,'click',wFORMS.behaviors['paging'].pagingNext);	
 					}
 				}
 			  
 			},
-
+			getButtonPlaceholder: function(page) {
+				var p = document.getElementById(page.id+this.idSuffix_buttonsPlaceholder);
+				if(!p) {
+					return page;
+				}				
+				return p; 
+			},
+			createNextPageButton: function() {						
+				var button = document.createElement("input"); 
+				button.setAttribute('value',wFORMS.arrMsg[4]);	
+				button.setAttribute('type',"button");	
+				button.className = this.className_pageNextButton;
+				return button;
+			},
+			createPreviousPageButton: function() {
+				// add previous page button			
+				var button = document.createElement("input"); 
+				button.setAttribute('value',wFORMS.arrMsg[5]);	
+				button.setAttribute('type',"button");	
+				button.className = this.className_pagePreviousButton;
+				return button;
+			},
+						
 			// ------------------------------------------------------------------------------------------
 			// pagingNext
 			// ------------------------------------------------------------------------------------------
@@ -77,16 +95,15 @@
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
 				
-				var pageElement     = element.parentNode;
+				var pageElement     = wFORMS.behaviors['paging'].getPageElement(element);
 				var pageIndex       = wFORMS.behaviors['paging'].getPageIndex(pageElement) + 1;
 				var nextPageElement = document.getElementById(wFORMS.idPrefix_pageIndex+pageIndex.toString());
 				
 				if(nextPageElement) {
 					if(!wFORMS.hasBehavior('validation') ||
 					   (wFORMS.hasBehavior('validation') && !wFORMS.runValidationOnPageNext) || 
-					   (wFORMS.hasBehavior('validation') &&  wFORMS.runValidationOnPageNext && wFORMS.functionName_formValidation(e))) {
-						 						  
-						pageElement.className      = pageElement.className.replace(wFORMS.className_pagingCurrent,"");
+					   (wFORMS.hasBehavior('validation') &&  wFORMS.runValidationOnPageNext && wFORMS.functionName_formValidation(e, true))) {
+						pageElement.className      = pageElement.className.replace(new RegExp(wFORMS.className_pagingCurrent,"g"),"");
 						nextPageElement.className += ' ' + wFORMS.className_pagingCurrent;
 
 						// show submit button if the last page of the form is reached
@@ -110,12 +127,12 @@
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
  
-				var pageElement         = element.parentNode;
+				var pageElement         = wFORMS.behaviors['paging'].getPageElement(element);
 				var pageIndex           = wFORMS.behaviors['paging'].getPageIndex(pageElement) - 1;
 				var previousPageElement = document.getElementById(wFORMS.idPrefix_pageIndex+pageIndex.toString());
 
 				if(previousPageElement) {
-					pageElement.className          = pageElement.className.replace(wFORMS.className_pagingCurrent,"");
+					pageElement.className          = pageElement.className.replace(new RegExp(wFORMS.className_pagingCurrent,"g"),"");
 					previousPageElement.className += ' ' + wFORMS.className_pagingCurrent;										
 															
 					// hide submit button 
@@ -153,6 +170,9 @@
 			// isLastPage
 			// ------------------------------------------------------------------------------------------					
 			isLastPage: function(pageIndex) {
+				if(isNaN(pageIndex)) {
+					pageIndex = parseInt(pageIndex.replace(/[\D]*/,""));
+				}
 				pageIndex++;
 				var furtherPageElement = document.getElementById(wFORMS.idPrefix_pageIndex+pageIndex.toString());			
 				if(!furtherPageElement) 
@@ -163,11 +183,12 @@
 			// gotoPage
 			// ------------------------------------------------------------------------------------------				
 			gotoPage: function(pageIndex) { 
+				
 				if(isNaN(pageIndex)) {
 					var pageElement = document.getElementById(pageIndex);					
 				} else {
 					var pageElement = document.getElementById(wFORMS.idPrefix_pageIndex+pageIndex.toString());
-				}
+				}				
 				if(!pageElement) return false;
 				
 				// get the corresponding form element
@@ -176,18 +197,19 @@
 				// hide current page
 				var allElements = form.getElementsByTagName("*");
 				for(var i=0; i< allElements.length; i++) {
-					if(wFORMS.helpers.hasClass(allElements[i],wFORMS.className_pagingCurrent)) {
-						allElements[i].className = allElements[i].className.replace(wFORMS.className_pagingCurrent,"");
+					var n =  allElements[i];
+					if(wFORMS.helpers.hasClass(allElements[i],wFORMS.className_pagingCurrent)) {	
+						n.className = n.className.replace(new RegExp(wFORMS.className_pagingCurrent,"g"),"");	
 						break;
 					}
 				}
-				
 				//show/hide submit button as necessary
+				
 				if(wFORMS.behaviors['paging'].isLastPage(pageIndex)) 
 					wFORMS.behaviors['paging'].showSubmitButton(form);
-				else
+				else { 
 					wFORMS.behaviors['paging'].hideSubmitButton(form);
-
+				}
 				// Show the page
 				pageElement.className += ' ' + wFORMS.className_pagingCurrent;
 				
@@ -203,6 +225,15 @@
 				return form;
 			},
 			// ------------------------------------------------------------------------------------------
+			// getPageElement
+			// ------------------------------------------------------------------------------------------							
+			getPageElement: function(element) {
+				var n = element.parentNode;
+				while(n && (!n.className || !wFORMS.helpers.hasClass(n,wFORMS.className_paging)))
+					n = n.parentNode;
+				return n;
+			},
+			// ------------------------------------------------------------------------------------------
 			// getPageIndex
 			// ------------------------------------------------------------------------------------------									
 			getPageIndex: function(element) {
@@ -211,10 +242,7 @@
 				else
 					return null;
 			}
-
-			
-       } // End wFORMS.behaviors
-	   
+       } // End wFORMS.behaviors['paging']
    }
    
    

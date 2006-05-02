@@ -12,21 +12,21 @@
 		wFORMS.className_validationError_fld	= "errFld";  
 		wFORMS.classNamePrefix_validation 		= "validate";	
 		wFORMS.idSuffix_fieldError				= "-E";
-		
-		// Error messages. This array may be overwritten in a separate js file for localization or customization purposes.
-		wFORMS.arrErrorMsg = new Array(); 
-		wFORMS.arrErrorMsg[0] = "This field is required. "; // required
-		wFORMS.arrErrorMsg[1] = "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed. "; 	// validate_alpha
-		wFORMS.arrErrorMsg[2] = "This does not appear to be a valid email address.";									// validate_email
-		wFORMS.arrErrorMsg[3] = "Please enter an integer.";															// validate_integer
-		wFORMS.arrErrorMsg[4] = "Please enter a float (ex. 1.9).";
-		wFORMS.arrErrorMsg[5] = "Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.";
-		wFORMS.arrErrorMsg[6] = "Please use alpha-numeric characters only [a-z 0-9].";
-		wFORMS.arrErrorMsg[7] = "This does not appear to be a valid date.";
-		wFORMS.arrErrorMsg[8] = "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."; // %% will be replaced by the actual number of errors.
 
 		wFORMS.behaviors['validation'] = {
-
+			
+			// Error messages. This may be overwritten in a separate js file for localization or customization purposes.			
+			errMsg_required 	: "This field is required. ",
+			errMsg_alpha 		: "The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",
+			errMsg_email 		: "This does not appear to be a valid email address.",
+			errMsg_integer 		: "Please enter an integer.",
+			errMsg_float 		: "Please enter a number (ex. 1.9).",
+			errMsg_password 	: "Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",
+			errMsg_alphanum 	: "Please use alpha-numeric characters only [a-z 0-9].",
+			errMsg_date 		: "This does not appear to be a valid date.",
+			errMsg_notification : "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",  // %% will be replaced by the actual number of errors.
+			errMsg_exactLength	: "This field should be %% character long",
+			
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
@@ -56,6 +56,8 @@
 				if(!element) element = e;
 				//wFORMS.debug('validation/run: ' + element.id , 5);	
 				
+				var currentPageOnly = arguments[1] ? arguments[1] : false;
+				
 				// on multi-page forms we need to prevent the submission when the 'enter' key is pressed
 				// (doesn't work in Opera. Further tests needed in IE and Safari)
 				if(wFORMS.preventSubmissionOnEnter) { 
@@ -68,7 +70,7 @@
 					element = element.parentNode;
 				}		
 				
-				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, true);
+				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, currentPageOnly, true);
 				
 				if (nbErrors > 0) {
 					if(wFORMS.showAlertOnError){ wFORMS.behaviors['validation'].showAlert(nbErrors); }
@@ -87,7 +89,10 @@
 			// ------------------------------------------------------------------------------------------
 			// validation functions
 			// ------------------------------------------------------------------------------------------
-			validateElement: function(element /*, deep */) {
+			validateElement: function(element /*, currentPageOnly, deep */) {
+				
+				var currentPageOnly = arguments[1] ? arguments[1] : false;				
+				var deep = arguments[2] ? arguments[2] : true;
 				
 				var wBehavior = wFORMS.behaviors['validation'];		// shortcut
 				
@@ -99,14 +104,14 @@
 				// do not validate elements that are not in the current page (Paging Behavior)
 				if(wFORMS.hasBehavior('paging') &&  wFORMS.helpers.hasClass(element,wFORMS.className_paging)
 											    && !wFORMS.helpers.hasClass(element,wFORMS.className_pagingCurrent) ) {
-					return 0;
+					if(currentPageOnly) return 0;
 				}
 				
 				var nbErrors = 0;
 				
 				// check if required
 				if(!wBehavior.checkRequired(element)) {
-					wBehavior.showError(element,wFORMS.arrErrorMsg[0]);
+					wBehavior.showError(element, wBehavior.errMsg_required);
 					nbErrors++;
 					//wFORMS.debug('validation/error: [required]' + element.id + '('+nbErrors+')' , 5);
 				} else {
@@ -119,21 +124,21 @@
 							switch(arrClasses[j]) {
 								case "validate-alpha":
 									if(!wBehavior.isAlpha(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[1]);
+										wBehavior.showError(element, wBehavior.errMsg_alpha);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [alpha]' + element.id , 5);
 									}
 									break;
 								case "validate-alphanum":
 									if(!wBehavior.isAlphaNum(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[6]);
+										wBehavior.showError(element, wBehavior.errMsg_alphanum);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [alphanum]' + element.id , 5);
 									}
 									break;
 								case "validate-date":
 									if(!wBehavior.isDate(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[7]);
+										wBehavior.showError(element, wBehavior.errMsg_date);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [date]' + element.id , 5);
 									}
@@ -143,32 +148,35 @@
 									break;
 								case "validate-email":
 									if(!wBehavior.isEmail(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[2]);
+										wBehavior.showError(element, wBehavior.errMsg_email);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [email]' + element.id , 5);
 									}
 									break;
 								case "validate-integer":
 									if(!wBehavior.isInteger(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[3]);
+										wBehavior.showError(element, wBehavior.errMsg_integer);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [integer]' + element.id , 5);
 									}					
 									break;
 								case "validate-float":
 									if(!wBehavior.isFloat(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[4]);
+										wBehavior.showError(element,wBehavior.errMsg_float);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [float]' + element.id , 5);
 									}
 									break;
 								case "validate-strongpassword": // NOT IMPLEMENTED
 									if(!wBehavior.isPassword(element.value)) {
-										wBehavior.showError(element,wFORMS.arrErrorMsg[5]);
+										wBehavior.showError(element, wBehavior.errMsg_password);
 										nbErrors++;
 										//wFORMS.debug('validation/error: [password]' + element.id , 5);
 									}
 									break;
+								case "validate-exactlength": 
+									// NOT IMPLEMENTED									
+									break;									
 							} // end switch
 						} // end for
 					}
@@ -176,18 +184,14 @@
 				
 				// remove previous error flags if any.
 				if(nbErrors==0) {
-					var rErrClass     = new RegExp(wFORMS.className_validationError_fld,"gi");
-					element.className = element.className.replace(rErrClass,"");
-					var errorMessage  = document.getElementById(element.id + wFORMS.idSuffix_fieldError);
-					if(errorMessage)  errorMessage.parentNode.removeChild(errorMessage);
+					wBehavior.removeErrorMessage(element);
 				} 
 					
-				// recursive loop	
-				var deep = arguments[1] ? arguments[1] : true;
+				// recursive loop					
 				if(deep) {
 					for(var i=0; i < element.childNodes.length; i++) {
 						if(element.childNodes[i].nodeType==1) { // Element Nodes only
-							nbErrors += wBehavior.validateElement(element.childNodes[i], deep);
+							nbErrors += wBehavior.validateElement(element.childNodes[i], currentPageOnly, deep);
 						}
 					}
 				}
@@ -283,8 +287,8 @@
 			},
 			// NOT IMPLEMENTED
 			isPassword: function(s) {
-			// Matches strong password : at least 1 upper case latter, one lower case letter. 4 characters minimum. 12 max.
-			//var regexp = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,12}$/;  // <= breaks in IE5/Mac
+				// Matches strong password : at least 1 upper case letter, one lower case letter. 4 characters minimum. 12 max.
+				//var regexp = /^(?=.*[a-z])(?=.*[A-Z])(?!.*\s).{4,12}$/;  // <= breaks in IE5/Mac
 				return wFORMS.behaviors['validation'].isEmpty(s);
 			},
 			
@@ -292,8 +296,8 @@
 			// Error Alert Functions
 			// ------------------------------------------------------------------------------------------		
 			showError: function (element,errorMsg) {		
-				if(element.className.indexOf(wFORMS.className_validationError_fld)!= -1) {
-					return;
+				if(wFORMS.helpers.hasClass(element,wFORMS.className_validationError_fld)) {
+					wFORMS.behaviors['validation'].removeErrorMessage(element);
 				}
 				if (!element.id) element.id = wFORMS.helpers.randomId(); // we'll need an id here.		
 				// Add error flag to the field
@@ -317,14 +321,40 @@
 				fe.appendChild(msgNode);  	
 				fe.className += " " + wFORMS.className_validationError_msg;
 			},
+			
 			showAlert: function (nbTotalErrors) {
-			   alert(wFORMS.arrErrorMsg[8].replace('%%',nbTotalErrors));
-			}			
+			   alert(wFORMS.behaviors['validation'].errMsg_notification.replace('%%',nbTotalErrors));
+			},
+			
+			removeErrorMessage: function(element) {
+				var rErrClass     = new RegExp(wFORMS.className_validationError_fld,"gi");
+				element.className = element.className.replace(rErrClass,"");
+				var errorMessage  = document.getElementById(element.id + wFORMS.idSuffix_fieldError);
+				if(errorMessage)  errorMessage.parentNode.removeChild(errorMessage);
+			}
+					
        } // End wFORMS.behaviors['validation']
 	   
 		wFORMS.functionName_formValidation = wFORMS.behaviors['validation'].run;
-		// backward compatibility
-		wFORMS.formValidation  			   = wFORMS.behaviors['validation'].run;
+
+
+		// ----------------------------------------------------------------------
+		// wForms 1.0 backward compatibility
+		// ----------------------------------------------------------------------
+		wFORMS.formValidation = wFORMS.behaviors['validation'].run;
+		
+		// Error messages. 
+		wFORMS.arrErrorMsg = new Array(); 
+		wFORMS.arrErrorMsg[0] = wFORMS.behaviors['validation'].errMsg_required;	
+		wFORMS.arrErrorMsg[1] = wFORMS.behaviors['validation'].errMsg_alpha; 			
+		wFORMS.arrErrorMsg[2] = wFORMS.behaviors['validation'].errMsg_email;		
+		wFORMS.arrErrorMsg[3] = wFORMS.behaviors['validation'].errMsg_integer;		
+		wFORMS.arrErrorMsg[4] = wFORMS.behaviors['validation'].errMsg_float;
+		wFORMS.arrErrorMsg[5] = wFORMS.behaviors['validation'].errMsg_password;
+		wFORMS.arrErrorMsg[6] = wFORMS.behaviors['validation'].errMsg_alphanum;
+		wFORMS.arrErrorMsg[7] = wFORMS.behaviors['validation'].errMsg_date;
+		wFORMS.arrErrorMsg[8] = wFORMS.behaviors['validation'].errMsg_notification;
+		
    }
    
    

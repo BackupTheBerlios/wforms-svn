@@ -26,7 +26,29 @@
 	#wfNav ul.wfPageNavigationCurrent {
 		color: #800080;
 	}
-
+	.wfPage {
+		width: 500px;
+		height: 300px;
+		border: 1px solid #aaa;
+		padding: 5px;
+		position: relative;
+	}
+	
+	.wfPgButtons  {
+		position: absolute;
+		width: 490px;
+		bottom: 16px;
+		border: 1px solid #ccc;
+		padding: 4px;
+		background-color: #eee;
+	}
+	.wfPagePreviousButton {
+		float: left;
+	}
+	.wfPageNextButton, .submitButton {
+		float: right;
+	}
+	
 </style>
 </head>
 <body>
@@ -37,23 +59,27 @@
 		<!--The first page must have a title.-->
 		<div class="wfPage" id="wfPgIndex-1" title="step one | set weight">
 			<h2>Weight of item</h2>
-			<label for="weight">Weight</label> <input name="weight" type="text" />
+			<label for="weight">Weight</label> <input name="weight" type="text" class='required validate-float' />
+			<div id="wfPgIndex-1-buttons" class='wfPgButtons'></div>
 		</div>
 		<div class="wfPage" id="wfPgIndex-2" title="step two | set size">
 			<h2>Size of item</h2>
 			
-			<label for="size">Size</label> <input name="size" type="text" />
+			<label for="size">Size</label> <input name="size" type="text" class='required' />
+			<div id="wfPgIndex-2-buttons" class='wfPgButtons'></div>
 		</div>
 		<!--Third page is considered to be part of the second step, so doesn't have a title.-->
 		<div class="wfPage" id="wfPgIndex-3">
 			<h2>Size of item: details</h2>
-			<label for="size-details">Details of size</label> <textarea name="size-details"></textarea>
+			<label for="size-details">Details of size</label> <textarea name="size-details" class='required'></textarea>
+			<div id="wfPgIndex-3-buttons" class='wfPgButtons'></div>
 		</div>
 		<div class="wfPage" id="wfPgIndex-4" title="step three | set age">
 			<h2>Age of item</h2>
 			<label for="age">Age</label> <input name="age" type="text" />
-			<input type="submit" value="submit" />
+			<div id="wfPgIndex-4-buttons" class='wfPgButtons'><input type="submit" value="submit" class="submitButton" /></div>			
 		</div>
+	
 	</form>
 </body>
 </html>

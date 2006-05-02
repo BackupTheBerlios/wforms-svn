@@ -1,11 +1,3 @@
-wFORMS.NAME     = "wForms";
-wFORMS.VERSION  = "2.01beta";
-wFORMS.__repr__ = function () {
-	return "[" + this.NAME + " " + this.VERSION + "]";
-};
-wFORMS.toString = function () {
-	return this.__repr__();
-};
 
 
 function wHELPERS() {};
@@ -290,7 +282,7 @@ var Fat = {
 			if(!node || node.nodeType!=1) return;
 			
 			deep=(arguments.length>1)?arguments[1]:true;	
-				    	    	
+				   
 			wFORMS._addBehaviors(node, deep);					
 		  },
 		  
@@ -307,7 +299,7 @@ var Fat = {
 			  }
 			 
 			  if(deep) {
-				  for (var i=node.childNodes.length-1, cn=node.childNodes; i>=0; i--) {
+				  for (var i=0, l=node.childNodes.length, cn=node.childNodes; i<l; i++) {
 				  	 if(cn[i].nodeType==1)
 					 	wFORMS._addBehaviors(cn[i], deep);
 				  }
@@ -365,6 +357,15 @@ var Fat = {
 		if(wFORMS.debugOutput)
 			wFORMS.debugOutput.ondblclick = function() { this.innerHTML = '' };
 	}
+  };
+  
+  wFORMS.NAME     = "wForms";
+  wFORMS.VERSION  = "2.01beta";
+  wFORMS.__repr__ = function () {
+	return "[" + this.NAME + " " + this.VERSION + "]";
+  };
+  wFORMS.toString = function () {
+	return this.__repr__();
   };
  
  

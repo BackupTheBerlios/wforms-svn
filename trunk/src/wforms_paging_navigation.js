@@ -10,6 +10,7 @@
  	wFORMS.behaviors['paging_navigation'] = {
 		
 		className_pagingNavigation   : "wfPagingNavigation",
+		className_pagingNavigationCurrent : "wfPagingCurrent",
 		classNamePrefix_navigationLi : "wfPagingItem",
 		usePagingNavigation : false,
 		pagingNavigation 	: [],
@@ -17,11 +18,12 @@
 		// ------------------------------------------------------------------------------------------
 		// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		// ------------------------------------------------------------------------------------------
- 		evaluate: function(node) { 			
+ 		evaluate: function(node) { 		
+ 			
  			if (wFORMS.helpers.hasClass(node,this.className_pagingNavigation)) {
  				this.usePagingNavigation = true;
  				this.currentNavigationIndex = 1; 
- 				this.navigationRoot = node;				 				
+ 				this.navigationRoot = node;				
  			}
  			if (wFORMS.helpers.hasClass(node,wFORMS.className_paging)) {
  				if(node.getAttribute("title")) {
@@ -39,19 +41,18 @@
 	   	// ------------------------------------------------------------------------------------------	   
 	   	init: function() {
 	   		var wb = wFORMS.behaviors['paging_navigation'];
+	   		
 	   		if(wb.usePagingNavigation) {
 		   		wb.createNavigation();
 		   		wb._onPageChange = wFORMS.behaviors['paging'].onPageChange;
 		   		
 	   			wFORMS.behaviors['paging'].onPageChange = function(previousPageElement) {
-					// TO-DO: change classnames on navigation					
-					
+					// TO-DO: change classnames on navigation										
 					// call saved onPageChange function
 					if(wb._onPageChange) { 		
 		   				wb._onPageChange(previousPageElement);
 		   			}
 	   			}
-		   		
 		   	}
  		},
  		
@@ -66,13 +67,14 @@
 	 			var li = document.createElement("li"); 
 	 			var a  = document.createElement("a");
 	 			a.appendChild(document.createTextNode(title)); 
-	 			a.href = "#"; 			
- 				wFORMS.helpers.addEvent(a,'click', function() { wFORMS.behaviors['paging'].gotoPage(page.id); } );
+	 			a.href = "#"; 	
+	 			a.id   = "nav__" + page.id;
+ 				a.onclick = function() { wFORMS.behaviors['paging'].gotoPage(this.id.substr(this.id.indexOf('__')+2)); };
 				li.appendChild(a);
 				li.appendChild(document.createTextNode(subtitle));
 				li.className = this.classNamePrefix_navigationLi + '-' + i.toString();
  				if(i==0) {
- 					li.className += ' ' + wFORMS.className_pagingCurrent;
+ 					li.className += ' ' + wb.className_pagingNavigationCurrent;
  				}
  				ul.appendChild(li);
  			}
