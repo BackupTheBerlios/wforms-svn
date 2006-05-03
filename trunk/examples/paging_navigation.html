@@ -35,6 +35,7 @@
 	}
 	
 	.wfPgButtons  {
+		left: 5px;
 		position: absolute;
 		width: 490px;
 		bottom: 16px;
@@ -50,6 +51,7 @@
 	}
 	
 </style>
+
 </head>
 <body>
 	<form id="form1">
@@ -59,7 +61,7 @@
 		<!--The first page must have a title.-->
 		<div class="wfPage" id="wfPgIndex-1" title="step one | set weight">
 			<h2>Weight of item</h2>
-			<label for="weight">Weight</label> <input name="weight" type="text" class='required validate-float' />
+			<label for="weight">Weight</label> <input name="weight" type="text" class='required validate-custom /\dlb/i' />
 			<div id="wfPgIndex-1-buttons" class='wfPgButtons'></div>
 		</div>
 		<div class="wfPage" id="wfPgIndex-2" title="step two | set size">
@@ -77,9 +79,24 @@
 		<div class="wfPage" id="wfPgIndex-4" title="step three | set age">
 			<h2>Age of item</h2>
 			<label for="age">Age</label> <input name="age" type="text" />
-			<div id="wfPgIndex-4-buttons" class='wfPgButtons'><input type="submit" value="submit" class="submitButton" /></div>			
+			<div id="wfPgIndex-4-buttons" class='wfPgButtons'> <img src="images/submit.gif" id='submitbutton' /></div>			
 		</div>
 	
 	</form>
+<script type='text/javascript'>
+	wFORMS.behaviors['paging'].createNextPageButton = function() {						
+		var button = document.createElement("img"); 
+		button.src = "images/continue.gif";
+		button.className = this.className_pageNextButton;
+		return button;
+	}
+	wFORMS.behaviors['paging'].createPreviousPageButton = function() {
+		var button = document.createElement("img"); 
+		button.src = "images/back.gif";
+		button.className = this.className_pagePreviousButton;
+		return button;
+	}			
+	document.getElementById('submitbutton').onclick = function(e) { if(wFORMS.behaviors['validation'].run(document.forms['form1'])) document.forms['form1'].submit(); }	
+</script>	
 </body>
 </html>

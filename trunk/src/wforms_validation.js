@@ -25,7 +25,7 @@
 			errMsg_alphanum 	: "Please use alpha-numeric characters only [a-z 0-9].",
 			errMsg_date 		: "This does not appear to be a valid date.",
 			errMsg_notification : "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",  // %% will be replaced by the actual number of errors.
-			errMsg_exactLength	: "This field should be %% character long",
+			errMsg_custom		: "Please enter a valid value.",
 			
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
@@ -126,21 +126,18 @@
 									if(!wBehavior.isAlpha(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_alpha);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [alpha]' + element.id , 5);
 									}
 									break;
 								case "validate-alphanum":
 									if(!wBehavior.isAlphaNum(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_alphanum);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [alphanum]' + element.id , 5);
 									}
 									break;
 								case "validate-date":
 									if(!wBehavior.isDate(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_date);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [date]' + element.id , 5);
 									}
 									break;
 								case "validate-time":
@@ -150,32 +147,36 @@
 									if(!wBehavior.isEmail(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_email);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [email]' + element.id , 5);
 									}
 									break;
 								case "validate-integer":
 									if(!wBehavior.isInteger(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_integer);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [integer]' + element.id , 5);
 									}					
 									break;
 								case "validate-float":
 									if(!wBehavior.isFloat(element.value)) {
 										wBehavior.showError(element,wBehavior.errMsg_float);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [float]' + element.id , 5);
 									}
 									break;
 								case "validate-strongpassword": // NOT IMPLEMENTED
 									if(!wBehavior.isPassword(element.value)) {
 										wBehavior.showError(element, wBehavior.errMsg_password);
 										nbErrors++;
-										//wFORMS.debug('validation/error: [password]' + element.id , 5);
 									}
 									break;
-								case "validate-exactlength": 
-									// NOT IMPLEMENTED									
+								case "validate-custom": 
+									var pattern = new RegExp("\/([^\/]*)\/([gi]*)");
+									var matches = element.className.match(pattern);
+									if(matches[0]) {										
+										var validationPattern = new RegExp(matches[1],matches[2]);
+										if(!element.value.match(validationPattern)) {
+											wBehavior.showError(element, wBehavior.errMsg_custom);
+											nbErrors++;											
+										}
+									}															
 									break;									
 							} // end switch
 						} // end for
