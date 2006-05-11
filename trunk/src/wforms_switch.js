@@ -104,7 +104,7 @@
 						if(!wFORMS.switchTargets[switchNames[i]]) 
 							wFORMS.switchTargets[switchNames[i]] = new Array();
 						if(!wFORMS.switchTargets[switchNames[i]][node.id]) 
-						wFORMS.switchTargets[switchNames[i]].push(node.id);
+							wFORMS.switchTargets[switchNames[i]].push(node.id);
 						//wFORMS.debug('switch/evaluate: [target] '+ switchNames[i],3);
 					}										
 				}

@@ -69,12 +69,12 @@
 	 			a.appendChild(document.createTextNode(title)); 
 	 			a.href = "#"; 	
 	 			a.id   = "nav__" + page.id;
- 				a.onclick = function() { wFORMS.behaviors['paging'].gotoPage(this.id.substr(this.id.indexOf('__')+2)); };
+ 				a.onclick = function() { wFORMS.behaviors['paging'].gotoPage(this.id.substr(this.id.indexOf('__')+2)); return false; };
 				li.appendChild(a);
 				li.appendChild(document.createTextNode(subtitle));
 				li.className = this.classNamePrefix_navigationLi + '-' + i.toString();
  				if(i==0) {
- 					li.className += ' ' + wb.className_pagingNavigationCurrent;
+ 					li.className += ' wfFirst ' + wb.className_pagingNavigationCurrent;
  				}
  				ul.appendChild(li);
  			}

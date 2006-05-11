@@ -1,4 +1,6 @@
-
+// wForms - a javascript extension to web forms.
+// see http://www.formassembly.com/wForms
+// This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 
 function wHELPERS() {};
 
@@ -115,7 +117,14 @@ wHELPERS.prototype.hasClassPrefix = function(element,className) {
 	}
 	return false;
 }
-
+	wHELPERS.prototype.hasIdPrefix = function(element,idPrefix) {
+		if(element && element.id) {
+			if(element.id.indexOf(idPrefix) != -1) {
+				return true;
+			}
+		}
+		return false;
+	}
 
 
 // getTop / getLeft  
@@ -286,14 +295,13 @@ var Fat = {
 			wFORMS._addBehaviors(node, deep);					
 		  },
 		  
-		  _addBehaviors : function (node, deep) {
-			  if(node.getAttribute('rel')=='no-behavior') {
-			  	return false;
-			  }
+	  _addBehaviors : function (node, deep) {
+		  if(node.getAttribute('rel')=='no-behavior') {
+		  	return false;
+		  }
 		
 		 // Process element nodes only
 		 if(node.nodeType == 1) { 
-			  wFORMS.debug(node.tagName + ' ' + node.id);
 			  for(var behaviorName in wFORMS.behaviors) {
 				  wFORMS.behaviors[behaviorName].evaluate(node);
 			  }
