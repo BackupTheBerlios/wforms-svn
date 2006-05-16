@@ -103,6 +103,7 @@
 					if(!wFORMS.hasBehavior('validation') ||
 					   (wFORMS.hasBehavior('validation') && !wFORMS.runValidationOnPageNext) || 
 					   (wFORMS.hasBehavior('validation') &&  wFORMS.runValidationOnPageNext && wFORMS.functionName_formValidation(e, true))) {
+						
 						pageElement.className      = pageElement.className.replace(new RegExp(wFORMS.className_pagingCurrent,"g"),"");
 						nextPageElement.className += ' ' + wFORMS.className_pagingCurrent;
 
@@ -111,12 +112,11 @@
 							var form = wFORMS.behaviors['paging'].getFormElement(nextPageElement);
 							wFORMS.behaviors['paging'].showSubmitButton(form);
 						}
-					}
-
-					// trigger onPageChange event						
-					if(wFORMS.behaviors['paging'].onPageChange) {
-						wFORMS.behaviors['paging'].onPageChange(nextPageElement);
-					}
+						// trigger onPageChange event						
+						if(wFORMS.behaviors['paging'].onPageChange) {
+							wFORMS.behaviors['paging'].onPageChange(nextPageElement);
+						}
+					}					
 				}
 			},
 			
@@ -197,8 +197,8 @@
 				// hide current page
 				var allElements = form.getElementsByTagName("*");
 				for(var i=0; i< allElements.length; i++) {
-					var n =  allElements[i];
-					if(wFORMS.helpers.hasClass(allElements[i],wFORMS.className_pagingCurrent)) {	
+					var n =  allElements[i];					
+					if(wFORMS.helpers.hasClass(allElements[i],wFORMS.className_pagingCurrent)) {						
 						n.className = n.className.replace(new RegExp(wFORMS.className_pagingCurrent,"g"),"");	
 						break;
 					}
@@ -213,7 +213,10 @@
 				// Show the page
 				pageElement.className += ' ' + wFORMS.className_pagingCurrent;
 				
-				// TO-DO: trigger onPageChange event ?
+				// trigger onPageChange event
+				if(wFORMS.behaviors['paging'].onPageChange) {
+					wFORMS.behaviors['paging'].onPageChange(pageElement);
+				}
 			},
 			// ------------------------------------------------------------------------------------------
 			// getFormElement

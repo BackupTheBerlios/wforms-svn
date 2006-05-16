@@ -265,7 +265,7 @@ var Fat = {
 	  helpers        : new wHELPERS(),     
 	  behaviors      : {},
 	  onLoadComplete : new Array(),  /* stack of functions to call once all behaviors have been applied */
-		  processedForm  : null,
+	  processedForm  : null,
 	  
 	  onLoadHandler  : function() {
 		  for(var behaviorName in  wFORMS.behaviors) {

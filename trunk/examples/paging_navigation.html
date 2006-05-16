@@ -4,10 +4,21 @@
    <title>wForms 2.0 Example</title>
    <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
    <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   
    <script type="text/javascript" src="../src/wforms_core.js" ></script>
    <script type="text/javascript" src="../src/wforms_paging.js" ></script>
    <script type="text/javascript" src="../src/wforms_paging_navigation.js" ></script>   
    <script type="text/javascript" src="../src/wforms_validation.js" ></script>
+	<script type="text/javascript">
+		/* Replace the default navigation subtitle markup */
+		wFORMS.behaviors['paging_navigation'].createNavigationSubtitle = function(subtitle) {
+			var e = document.createElement('div');
+			var t = document.createTextNode('subtitle');
+			e.appendChild(t);
+			e.className = 'wfSubTitle';
+			return e;
+		};
+	</script>
    <style type='text/css'>
 
 	#wfNav ul {
@@ -51,7 +62,6 @@
 	}
 	
 </style>
-
 </head>
 <body>
 	<form id="form1">
@@ -61,7 +71,7 @@
 		<!--The first page must have a title.-->
 		<div class="wfPage" id="wfPgIndex-1" title="step one | set weight">
 			<h2>Weight of item</h2>
-			<label for="weight">Weight</label> <input name="weight" type="text" class='required validate-custom /\dlb/i' />
+			<label for="weight">Weight</label> <input name="weight" type="text" class='required validate-custom /^\d{3}$/i' />
 			<div id="wfPgIndex-1-buttons" class='wfPgButtons'></div>
 		</div>
 		<div class="wfPage" id="wfPgIndex-2" title="step two | set size">
@@ -98,5 +108,29 @@
 	}			
 	document.getElementById('submitbutton').onclick = function(e) { if(wFORMS.behaviors['validation'].run(document.forms['form1'])) document.forms['form1'].submit(); }	
 </script>	
+   <script type="text/javascript" src="3rdParty/dhtmlHistory.js" ></script>
+   <script type="text/javascript"> 	
+		function handleHistoryChange(newLocation, historyData) {
+		  // use the history data to update our UI
+		  if(newLocation) {
+			  _current = parseInt(newLocation.replace(/\D*/,''));
+		  } else
+			  _current = 1;
+			  
+		  wFORMS.behaviors['paging'].gotoPage(_current);
+		}
+		
+		wFORMS.behaviors['paging'].onPageChange = function(newPageElement) {			
+			if(dhtmlHistory)
+				dhtmlHistory.add("_page" + wFORMS.behaviors['paging'].getPageIndex(newPageElement));
+		}
+		
+		wFORMS.helpers.addEvent(window,'load', function() {
+			dhtmlHistory.initialize();
+			dhtmlHistory.addListener(handleHistoryChange);					
+		});
+		
+   </script>
+   
 </body>
 </html>

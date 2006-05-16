@@ -27,6 +27,10 @@
 			errMsg_notification : "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",  // %% will be replaced by the actual number of errors.
 			errMsg_custom		: "Please enter a valid value.",
 			
+			// first page w/ error in a multi-page form
+			jumpToErrorOnPage : null,
+			currentPageIndex  : -1,
+			
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
@@ -57,6 +61,7 @@
 				//wFORMS.debug('validation/run: ' + element.id , 5);	
 				
 				var currentPageOnly = arguments[1] ? arguments[1] : false;
+				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
 				
 				// on multi-page forms we need to prevent the submission when the 'enter' key is pressed
 				// (doesn't work in Opera. Further tests needed in IE and Safari)
@@ -72,7 +77,10 @@
 				
 				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, currentPageOnly, true);
 				
-				if (nbErrors > 0) {
+				if (nbErrors > 0) {					
+					if(wFORMS.behaviors['validation'].jumpToErrorOnPage) {
+						wFORMS.behaviors['paging'].gotoPage(wFORMS.behaviors['validation'].jumpToErrorOnPage);
+					}
 					if(wFORMS.showAlertOnError){ wFORMS.behaviors['validation'].showAlert(nbErrors); }
 					return wFORMS.helpers.preventEvent(e); 
 				}
@@ -90,9 +98,11 @@
 			// validation functions
 			// ------------------------------------------------------------------------------------------
 			validateElement: function(element /*, currentPageOnly, deep */) {
-				
-				var currentPageOnly = arguments[1] ? arguments[1] : false;				
+
 				var deep = arguments[2] ? arguments[2] : true;
+				
+				// used in multi-page forms
+				var currentPageOnly = arguments[1] ? arguments[1] : false;				
 				
 				var wBehavior = wFORMS.behaviors['validation'];		// shortcut
 				
@@ -104,7 +114,9 @@
 				// do not validate elements that are not in the current page (Paging Behavior)
 				if(wFORMS.hasBehavior('paging') &&  wFORMS.helpers.hasClass(element,wFORMS.className_paging)
 											    && !wFORMS.helpers.hasClass(element,wFORMS.className_pagingCurrent) ) {
-					if(currentPageOnly) return 0;
+					if(currentPageOnly) 
+						return 0;
+					wBehavior.currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(element);					
 				}
 				
 				var nbErrors = 0;
@@ -186,7 +198,12 @@
 				// remove previous error flags if any.
 				if(nbErrors==0) {
 					wBehavior.removeErrorMessage(element);
-				} 
+				} else {
+					// flag the first page with an error (if multi-page form)
+					if(wBehavior.currentPageIndex>0 && !wBehavior.jumpToErrorOnPage) {
+						wBehavior.jumpToErrorOnPage = wBehavior.currentPageIndex;
+					}
+				}
 					
 				// recursive loop					
 				if(deep) {

@@ -2,7 +2,6 @@
 // Form Paging Behavior
 // ------------------------------------------------------------------------------------------
 // Adapted from Nedjo Rogers
-// NOT FULLY IMPLEMENTED YET.
 
 
  if(wFORMS && wFORMS.hasBehavior('paging')) {
@@ -23,17 +22,17 @@
  			if (wFORMS.helpers.hasClass(node,this.className_pagingNavigation)) {
  				this.usePagingNavigation = true;
  				this.currentNavigationIndex = 1; 
- 				this.navigationRoot = node;				
+ 				this.navigationRoot = node;		
+ 				wFORMS.debug('top navigation found:'+node.id);
+ 				// function to be called when all behaviors for this form have been applied
+				wFORMS.onLoadComplete.push(this.init); 
  			}
  			if (wFORMS.helpers.hasClass(node,wFORMS.className_paging)) {
  				if(node.getAttribute("title")) {
  					this.pagingNavigation.push(node);
  				}
  			}
- 			if(node.tagName && node.tagName.toUpperCase()=='FORM') {
-				// function to be called when all behaviors for this form have been applied
-				wFORMS.onLoadComplete.push(this.init); 
-			}
+ 			
 		},
  		
 	   	// ------------------------------------------------------------------------------------------
@@ -43,6 +42,7 @@
 	   		var wb = wFORMS.behaviors['paging_navigation'];
 	   		
 	   		if(wb.usePagingNavigation) {
+	   			wFORMS.debug('creating top navigation');
 		   		wb.createNavigation();
 		   		wb._onPageChange = wFORMS.behaviors['paging'].onPageChange;
 		   		
@@ -65,13 +65,11 @@
  				var title = this.getPageTitle(page);
  				var subtitle = this.getPageSubtitle(page);
 	 			var li = document.createElement("li"); 
-	 			var a  = document.createElement("a");
-	 			a.appendChild(document.createTextNode(title)); 
-	 			a.href = "#"; 	
-	 			a.id   = "nav__" + page.id;
- 				a.onclick = function() { wFORMS.behaviors['paging'].gotoPage(this.id.substr(this.id.indexOf('__')+2)); return false; };
-				li.appendChild(a);
-				li.appendChild(document.createTextNode(subtitle));
+	 			var lk = this.createNavigationLink(title);
+	 			lk.id   = "nav__" + page.id;
+	 			lk.onclick = function() { wFORMS.behaviors['paging'].gotoPage(this.id.substr(this.id.indexOf('__')+2)); return false; };	 			
+	 			li.appendChild(lk);
+				li.appendChild(this.createNavigationSubtitle(subtitle));
 				li.className = this.classNamePrefix_navigationLi + '-' + i.toString();
  				if(i==0) {
  					li.className += ' wfFirst ' + wb.className_pagingNavigationCurrent;
@@ -79,6 +77,17 @@
  				ul.appendChild(li);
  			}
  			this.navigationRoot.appendChild(ul);
+ 		},
+ 		
+ 		createNavigationLink: function(title) {
+ 			var a  = document.createElement("a");
+	 		a.appendChild(document.createTextNode(title)); 
+	 		a.href = "#"; 	
+			return a;	
+ 		},
+ 		
+ 		createNavigationSubtitle : function(subtitle) {
+ 			return document.createTextNode(subtitle);
  		},
  		
  		getPageTitle: function(n) {
