@@ -61,8 +61,9 @@
 				//wFORMS.debug('validation/run: ' + element.id , 5);	
 				
 				var currentPageOnly = arguments[1] ? arguments[1] : false;
-				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
 				
+				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
+
 				// on multi-page forms we need to prevent the submission when the 'enter' key is pressed
 				// (doesn't work in Opera. Further tests needed in IE and Safari)
 				if(wFORMS.preventSubmissionOnEnter) { 
@@ -78,7 +79,7 @@
 				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, currentPageOnly, true);
 				
 				if (nbErrors > 0) {					
-					if(wFORMS.behaviors['validation'].jumpToErrorOnPage) {
+					if(wFORMS.behaviors['validation'].jumpToErrorOnPage) {					
 						wFORMS.behaviors['paging'].gotoPage(wFORMS.behaviors['validation'].jumpToErrorOnPage);
 					}
 					if(wFORMS.showAlertOnError){ wFORMS.behaviors['validation'].showAlert(nbErrors); }
@@ -112,11 +113,10 @@
 					return 0;
 				}
 				// do not validate elements that are not in the current page (Paging Behavior)
-				if(wFORMS.hasBehavior('paging') &&  wFORMS.helpers.hasClass(element,wFORMS.className_paging)
-											    && !wFORMS.helpers.hasClass(element,wFORMS.className_pagingCurrent) ) {
-					if(currentPageOnly) 
+				if(wFORMS.hasBehavior('paging') && wFORMS.helpers.hasClass(element,wFORMS.className_paging)) {
+					if(!wFORMS.helpers.hasClass(element,wFORMS.className_pagingCurrent) && currentPageOnly)
 						return 0;
-					wBehavior.currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(element);					
+					wBehavior.currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(element);
 				}
 				
 				var nbErrors = 0;
