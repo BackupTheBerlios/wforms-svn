@@ -78,6 +78,9 @@
 				
 				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, currentPageOnly, true);
 				
+				// save the value in a property if someone else needs it.
+				wFORMS.behaviors['validation'].errorCount = nbErrors;
+				
 				if (nbErrors > 0) {					
 					if(wFORMS.behaviors['validation'].jumpToErrorOnPage) {					
 						wFORMS.behaviors['paging'].gotoPage(wFORMS.behaviors['validation'].jumpToErrorOnPage);

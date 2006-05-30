@@ -479,9 +479,9 @@ if(wFORMS.behaviors["paging"].isLastPage(_5b)){
 var _5d=wFORMS.behaviors["paging"].getFormElement(_5c);
 wFORMS.behaviors["paging"].showSubmitButton(_5d);
 }
-}
 if(wFORMS.behaviors["paging"].onPageChange){
 wFORMS.behaviors["paging"].onPageChange(_5c);
+}
 }
 }
 },pagingPrevious:function(e){
@@ -549,6 +549,9 @@ wFORMS.behaviors["paging"].showSubmitButton(_6e);
 wFORMS.behaviors["paging"].hideSubmitButton(_6e);
 }
 _6d.className+=" "+wFORMS.className_pagingCurrent;
+if(wFORMS.behaviors["paging"].onPageChange){
+wFORMS.behaviors["paging"].onPageChange(_6d);
+}
 },getFormElement:function(_72){
 var _73=_72.parentNode;
 while(_73&&_73.tagName.toUpperCase()!="FORM"){
@@ -966,11 +969,6 @@ _a0=_a0.concat(wFORMS.behaviors["switch"].getSwitchNames(_9e));
 }
 break;
 default:
-if(!wFORMS.helpers.hasClass(_9e,wFORMS.className_switchIsOn)){
-_9f=_9f.concat(wFORMS.behaviors["switch"].getSwitchNames(_9e));
-}else{
-_a0=_a0.concat(wFORMS.behaviors["switch"].getSwitchNames(_9e));
-}
 break;
 }
 for(var i=0;i<_a0.length;i++){
@@ -999,13 +997,6 @@ wFORMS.behaviors["switch"].switchState(_a3[j],wFORMS.classNamePrefix_offState,wF
 }
 }
 }
-if(wFORMS.helpers.hasClass(_9e,wFORMS.className_switchIsOff)){
-_9e.className=_9e.className.replace(wFORMS.className_switchIsOff,wFORMS.className_switchIsOn);
-}else{
-if(wFORMS.helpers.hasClass(_9e,wFORMS.className_switchIsOn)){
-_9e.className=_9e.className.replace(wFORMS.className_switchIsOn,wFORMS.className_switchIsOff);
-}
-}
 },clear:function(e){
 wFORMS.switchTriggers={};
 wFORMS.switchTargets={};
@@ -1031,6 +1022,13 @@ return;
 }
 if(_ae.className){
 _ae.className=_ae.className.replace(_af,_b0);
+}
+if(wFORMS.helpers.hasClass(_ae,wFORMS.className_switchIsOff)){
+_ae.className=_ae.className.replace(wFORMS.className_switchIsOff,wFORMS.className_switchIsOn);
+}else{
+if(wFORMS.helpers.hasClass(_ae,wFORMS.className_switchIsOn)){
+_ae.className=_ae.className.replace(wFORMS.className_switchIsOn,wFORMS.className_switchIsOff);
+}
 }
 },getElementsBySwitchName:function(_b1){
 var _b2=new Array();
@@ -1099,7 +1097,7 @@ wFORMS.className_validationError_msg="errMsg";
 wFORMS.className_validationError_fld="errFld";
 wFORMS.classNamePrefix_validation="validate";
 wFORMS.idSuffix_fieldError="-E";
-wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",evaluate:function(_bc){
+wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",jumpToErrorOnPage:null,currentPageIndex:-1,evaluate:function(_bc){
 if(_bc.tagName.toUpperCase()=="FORM"){
 if(wFORMS.functionName_formValidation.toString()==wFORMS.functionName_formValidation){
 wFORMS.functionName_formValidation=eval(wFORMS.functionName_formValidation);
@@ -1113,6 +1111,7 @@ if(!_be){
 _be=e;
 }
 var _bf=arguments[1]?arguments[1]:false;
+wFORMS.behaviors["validation"].jumpToErrorOnPage=null;
 if(wFORMS.preventSubmissionOnEnter){
 if(_be.type&&_be.type.toLowerCase()=="text"){
 return wFORMS.preventEvent(e);
@@ -1122,7 +1121,11 @@ while(_be&&_be.tagName.toUpperCase()!="FORM"){
 _be=_be.parentNode;
 }
 var _c0=wFORMS.behaviors["validation"].validateElement(_be,_bf,true);
+wFORMS.behaviors["validation"].errorCount=_c0;
 if(_c0>0){
+if(wFORMS.behaviors["validation"].jumpToErrorOnPage){
+wFORMS.behaviors["paging"].gotoPage(wFORMS.behaviors["validation"].jumpToErrorOnPage);
+}
 if(wFORMS.showAlertOnError){
 wFORMS.behaviors["validation"].showAlert(_c0);
 }
@@ -1131,16 +1134,17 @@ return wFORMS.helpers.preventEvent(e);
 return true;
 },remove:function(){
 },validateElement:function(_c1){
-var _c2=arguments[1]?arguments[1]:false;
-var _c3=arguments[2]?arguments[2]:true;
+var _c2=arguments[2]?arguments[2]:true;
+var _c3=arguments[1]?arguments[1]:false;
 var _c4=wFORMS.behaviors["validation"];
 if(wFORMS.hasBehavior("switch")&&wFORMS.helpers.hasClassPrefix(_c1,wFORMS.classNamePrefix_offState)){
 return 0;
 }
-if(wFORMS.hasBehavior("paging")&&wFORMS.helpers.hasClass(_c1,wFORMS.className_paging)&&!wFORMS.helpers.hasClass(_c1,wFORMS.className_pagingCurrent)){
-if(_c2){
+if(wFORMS.hasBehavior("paging")&&wFORMS.helpers.hasClass(_c1,wFORMS.className_paging)){
+if(!wFORMS.helpers.hasClass(_c1,wFORMS.className_pagingCurrent)&&_c3){
 return 0;
 }
+_c4.currentPageIndex=wFORMS.behaviors["paging"].getPageIndex(_c1);
 }
 var _c5=0;
 if(!_c4.checkRequired(_c1)){
@@ -1212,11 +1216,15 @@ break;
 }
 if(_c5==0){
 _c4.removeErrorMessage(_c1);
+}else{
+if(_c4.currentPageIndex>0&&!_c4.jumpToErrorOnPage){
+_c4.jumpToErrorOnPage=_c4.currentPageIndex;
 }
-if(_c3){
+}
+if(_c2){
 for(var i=0;i<_c1.childNodes.length;i++){
 if(_c1.childNodes[i].nodeType==1){
-_c5+=_c4.validateElement(_c1.childNodes[i],_c2,_c3);
+_c5+=_c4.validateElement(_c1.childNodes[i],_c3,_c2);
 }
 }
 }
@@ -1333,7 +1341,6 @@ _e6.parentNode.removeChild(_e6);
 }};
 wFORMS.functionName_formValidation=wFORMS.behaviors["validation"].run;
 wFORMS.formValidation=wFORMS.behaviors["validation"].run;
-wFORMS.showError=wFORMS.behaviors["validation"].showError;
 wFORMS.arrErrorMsg=new Array();
 wFORMS.arrErrorMsg[0]=wFORMS.behaviors["validation"].errMsg_required;
 wFORMS.arrErrorMsg[1]=wFORMS.behaviors["validation"].errMsg_alpha;
