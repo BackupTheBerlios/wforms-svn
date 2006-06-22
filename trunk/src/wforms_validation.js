@@ -268,7 +268,12 @@
 						default:
 							value = element.value;
 					}
-				} else value = element.value;
+				} else if(element.tagName.toUpperCase() == "SELECT") {
+					value = element.options[element.selectedIndex].value
+				} else if(element.tagName.toUpperCase() == "TEXTAREA") {
+					value = element.value;
+				}
+
 				if(value && !wFORMS.behaviors['validation'].isEmpty(value)) {
 					return true;
 				}
