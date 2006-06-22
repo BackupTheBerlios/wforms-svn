@@ -1274,7 +1274,13 @@ default:
 _ce=_cd.value;
 }
 }else{
+if(_cd.tagName.toUpperCase()=="SELECT"){
+_ce=_cd.options[_cd.selectedIndex].value;
+}else{
+if(_cd.tagName.toUpperCase()=="TEXTAREA"){
 _ce=_cd.value;
+}
+}
 }
 if(_ce&&!wFORMS.behaviors["validation"].isEmpty(_ce)){
 return true;
