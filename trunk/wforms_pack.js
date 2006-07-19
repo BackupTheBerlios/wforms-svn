@@ -1295,11 +1295,11 @@ return false;
 var _d1=/^\s+$/;
 return ((s==null)||(s.length==0)||_d1.test(s));
 },isAlpha:function(s){
-var _d3=/^[a-zA-Z]+$/;
+var _d3=/^[a-zA-Z\s]+$/;
 return wFORMS.behaviors["validation"].isEmpty(s)||_d3.test(s);
 },isAlphaNum:function(s){
-var _d5=/\W/;
-return wFORMS.behaviors["validation"].isEmpty(s)||!_d5.test(s);
+var _d5=/^[\w\s]+$/;
+return wFORMS.behaviors["validation"].isEmpty(s)||_d5.test(s);
 },isDate:function(s){
 var _d7=new Date(s);
 return wFORMS.behaviors["validation"].isEmpty(s)||!isNaN(_d7);
