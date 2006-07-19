@@ -229,7 +229,9 @@
 
 					switch(element.tagName.toUpperCase()) {
 						case "INPUT":
-							switch(element.getAttribute("type").toLowerCase()) {
+							var inputType = element.getAttribute("type");
+							if(!inputType) inputType = 'text'; // handles lame markup
+							switch(inputType.toLowerCase()) {
 								case "checkbox":
 									return element.checked; 
 									break;
@@ -258,7 +260,10 @@
 				var value = false;
 				if(element.nodeType != 1) return false;
 				if(element.tagName.toUpperCase() == "INPUT") {
-					switch(element.type.toLowerCase()) {
+					var inputType = element.getAttribute("type");
+					if(!inputType) inputType = 'text'; // handles lame markup
+				
+					switch(inputType.toLowerCase()) {
 						case "checkbox":
 							value = element.checked; 
 							break;
