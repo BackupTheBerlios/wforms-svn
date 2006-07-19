@@ -289,12 +289,12 @@
 				return  ((s == null) || (s.length == 0) || regexpWhitespace.test(s));
 			},
 			isAlpha: function(s) {
-				var regexpAlphabetic = /^[a-zA-Z]+$/; // Add ' and - ?
+				var regexpAlphabetic = /^[a-zA-Z\s]+$/; // Add ' and - ?
 				return wFORMS.behaviors['validation'].isEmpty(s) || regexpAlphabetic.test(s);
 			},
 			isAlphaNum: function(s) {
-				var illegalChars = /\W/;
-				return wFORMS.behaviors['validation'].isEmpty(s) || !illegalChars.test(s);
+				var validChars = /^[\w\s]+$/;
+				return wFORMS.behaviors['validation'].isEmpty(s) || validChars.test(s);
 			},
 			isDate: function(s) {
 				var testDate = new Date(s);
