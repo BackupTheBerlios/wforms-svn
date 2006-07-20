@@ -24,22 +24,37 @@ if(wFORMS) {
                	     var hinted = document.getElementById(id) || wFORMS.processedForm[id];
                	   } 
                    if(hinted) {
-					  // wFORMS.debug('hint/evaluate: '+ (node.id || node.name));
-					   switch(hinted.tagName.toUpperCase()) {
-						   case 'SELECT': 
-						   case 'TEXTAREA':						   
-						   case 'INPUT':
-		                       	wFORMS.helpers.addEvent(hinted,'focus',wFORMS.behaviors['hint'].run);
-    		                   	wFORMS.helpers.addEvent(hinted,'blur' ,wFORMS.behaviors['hint'].remove);
-							   	break;
-						   default:
-						  	 	wFORMS.helpers.addEvent(hinted,'mouseover',wFORMS.behaviors['hint'].run);
-								wFORMS.helpers.addEvent(hinted,'mouseout' ,wFORMS.behaviors['hint'].remove);
-						  		break;
+					   // is hinted a node list ? (hint placed on a radio group using the name attribute)
+					   if(hinted.length > 0) {
+						   var hintedGroup = hinted;
+						   l = hinted.length;
+					   } else {
+						   var hintedGroup = new Array(hinted);
+						   l = 1;
+					   }
+					   
+					   for(var i=0;i<l;i++) {
+						   hinted = hintedGroup[0];
+
+						   wFORMS.debug('hint/evaluate: '+ (node.id || node.name));
+						   switch(hinted.tagName.toUpperCase()) {
+							   case 'SELECT': 
+							   case 'TEXTAREA':						   
+							   case 'INPUT':
+									wFORMS.helpers.addEvent(hinted,'focus',wFORMS.behaviors['hint'].run);
+									wFORMS.helpers.addEvent(hinted,'blur' ,wFORMS.behaviors['hint'].remove);
+									break;
+							   default:
+									wFORMS.helpers.addEvent(hinted,'mouseover',wFORMS.behaviors['hint'].run);
+									wFORMS.helpers.addEvent(hinted,'mouseout' ,wFORMS.behaviors['hint'].remove);
+									break;
+						   }
+						   
 					   }
                    } 
                }
            },
+
 		   
            // run: executed when the behavior is activated
            run: function(e) {

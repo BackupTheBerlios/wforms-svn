@@ -60,7 +60,8 @@
 				if(!element) element = e;
 				//wFORMS.debug('validation/run: ' + element.id , 5);	
 				
-				var currentPageOnly = arguments[1] ? arguments[1] : false;
+				var currentPageOnly = arguments[1] ? arguments[1] : (wFORMS.hasBehavior('paging') && wFORMS.behaviors['paging'].behaviorInUse);
+
 				
 				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
 

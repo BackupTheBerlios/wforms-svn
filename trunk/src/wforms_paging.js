@@ -24,7 +24,7 @@
 			idSuffix_buttonsPlaceholder: "-buttons",
 			className_pageNextButton: wFORMS.className_pagingButtons + " wfPageNextButton",
 			className_pagePreviousButton: wFORMS.className_pagingButtons + " wfPagePreviousButton",			
-			
+			behaviorInUse : false,
 			onPageChange : null, /* Function to run when the page is changed */
 
 			// ------------------------------------------------------------------------------------------
@@ -32,6 +32,8 @@
 			// ------------------------------------------------------------------------------------------
 			evaluate: function(node) {
 				if (wFORMS.helpers.hasClass(node,wFORMS.className_paging)) {
+					
+					wFORMS.behaviors['paging'].behaviorInUse = true;
 					
 					var currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(node);
 					if(currentPageIndex > 1) {
@@ -68,7 +70,11 @@
 			getButtonPlaceholder: function(page) {
 				var p = document.getElementById(page.id+this.idSuffix_buttonsPlaceholder);
 				if(!p) {
-					return page;
+					var buttonPlaceholder = document.createElement("div"); 	
+					buttonPlaceholder = page.appendChild(buttonPlaceholder);	
+					buttonPlaceholder.className = 'actions';
+					buttonPlaceholder.id = page.id+this.idSuffix_buttonsPlaceholder;
+					return buttonPlaceholder;
 				}				
 				return p; 
 			},
