@@ -368,7 +368,7 @@ var id=_44.id.replace(wFORMS.idSuffix_fieldHint,"");
 var _46=document.getElementById(id)||wFORMS.processedForm[id];
 }
 if(_46){
-if(_46.length>0){
+if(_46.length>0&&_46[0].type=="radio"){
 var _47=_46;
 l=_46.length;
 }else{
@@ -376,7 +376,7 @@ var _47=new Array(_46);
 l=1;
 }
 for(var i=0;i<l;i++){
-_46=_47[0];
+_46=_47[i];
 wFORMS.debug("hint/evaluate: "+(_44.id||_44.name));
 switch(_46.tagName.toUpperCase()){
 case "SELECT":

@@ -15,7 +15,7 @@ if(wFORMS) {
            name: 'hint', 
            
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
-           evaluate: function(node) {
+             evaluate: function(node) {
                if(node.id) {
                	   if(node.id.indexOf(wFORMS.idSuffix_fieldHint)>0) {               	   
                	     // this looks like a field-hint. See if we have a matching field.               	    
@@ -24,8 +24,8 @@ if(wFORMS) {
                	     var hinted = document.getElementById(id) || wFORMS.processedForm[id];
                	   } 
                    if(hinted) {
-					   // is hinted a node list ? (hint placed on a radio group using the name attribute)
-					   if(hinted.length > 0) {
+					   // is hint placed on a radio group using the name attribute?
+					   if(hinted.length > 0 && hinted[0].type=='radio') {
 						   var hintedGroup = hinted;
 						   l = hinted.length;
 					   } else {
@@ -34,7 +34,7 @@ if(wFORMS) {
 					   }
 					   
 					   for(var i=0;i<l;i++) {
-						   hinted = hintedGroup[0];
+						   hinted = hintedGroup[i];
 
 						   wFORMS.debug('hint/evaluate: '+ (node.id || node.name));
 						   switch(hinted.tagName.toUpperCase()) {
