@@ -1,18 +1,21 @@
-// wForms - a javascript extension to web forms.
-// Form Validation Component
-// v2.0 beta - Feb.14th 2006
-// This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
-    
+// ------------------------------------------------------------------------------------------
+// Repeat Behavior - 'limited' version
+// Thanks to Michael Bennet
+// for instructions, see: http://formassembly.com/forums/viewtopic.php?p=813#813
+// ------------------------------------------------------------------------------------------
     
    if(wFORMS) {
 		// Component properties 
 		wFORMS.className_repeat 			= "repeat";
 		wFORMS.className_delete 			= "removeable";
 		wFORMS.className_duplicateLink 		= "duplicateLink";
+		wFORMS.className_duplicateLinkHidden= 'duplicateLinkHidden';
 		wFORMS.className_removeLink 		= "removeLink";
 		wFORMS.className_preserveRadioName  = "preserveRadioName";		
 		wFORMS.idSuffix_repeatCounter		= "-RC";
-		wFORMS.idSuffix_duplicateLink		= "-wfDL";									 
+		wFORMS.idSuffix_maxRepeat			= "-MaxRC";
+		wFORMS.idSuffix_duplicateLink		= "-wfDL";	
+		wFORMS.idSuffix_removeLink			= "-wfRL";	
 		wFORMS.preserveRadioName			= false;									 // if true, Repeat behavior will preserve name attributes for radio input. 
 		wFORMS.limitSwitchScope				= true;									 	 // if true, Repeat behavior will limit the scope of nested switches.
 		
@@ -33,8 +36,7 @@
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_repeat)) {
 					//wFORMS.debug('evaluate/repeat: '+ node.id,3);
 				   
-					// Check if we have a 'repeat' link
-					if(!node.id) 
+				    if(!node.id) 
 						node.id = wFORMS.helpers.randomId();
 						
 					// Check if we have a 'repeat' link
@@ -47,6 +49,7 @@
 						repeatLink.setAttribute('href',"#");	
 						repeatLink.className = wFORMS.className_duplicateLink;			
 						repeatLink.setAttribute('title', wFORMS.arrMsg[1]);	
+						repeatLink.setAttribute('id',    node.id + wFORMS.idSuffix_duplicateLink);
 						// find where to insert the link
 						if(node.tagName.toUpperCase()=="TR") {
 							// find the last TD
@@ -99,12 +102,14 @@
 		 	  	// ------------------------------------------------------------------------------------------
 				// Removeable element
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_delete)) {
+
 					var removeLink = document.createElement("a");
 					var spanNode   = document.createElement("span");  // could be used for CSS image replacement 
 					var textNode   = document.createTextNode(wFORMS.arrMsg[2]);
 					removeLink.setAttribute('href',"#");	
 					removeLink.className = wFORMS.className_removeLink;
 					removeLink.setAttribute('title',wFORMS.arrMsg[3]);	
+					removeLink.setAttribute('id',node.id+wFORMS.idSuffix_removeLink);					
 					// find where to insert the link
 					if(node.tagName.toUpperCase()=="TR") {
 						// find the last TD
@@ -118,7 +123,7 @@
 						node.appendChild(removeLink);
 					spanNode.appendChild(textNode); 
 					removeLink.appendChild(spanNode); 	
-					wFORMS.helpers.addEvent(removeLink,'click',wFORMS.behaviors['repeat'].removeFieldGroup);			
+					wFORMS.helpers.addEvent(removeLink,'click',wFORMS.behaviors['repeat'].removeFieldGroup);
 				}	
 
            	},
@@ -141,8 +146,20 @@
 					counterField = document.getElementById(element.id + wFORMS.idSuffix_repeatCounter);
 					if(!counterField) return; // should not happen.
 					var rowCount = parseInt(counterField.value) + 1;
-					// Prepare id suffix (PHP Version)
-					var suffix = "[" + rowCount.toString() + "]";
+
+					var maxField = document.getElementById(element.id + wFORMS.idSuffix_maxRepeat);
+					if(maxField)
+						var maxRow = parseInt(maxField.value) + 1;
+					else 
+						var maxRow = 9999;
+					
+					if (rowCount < maxRow) 
+						this.className=wFORMS.className_duplicateLink;
+					else 								
+						this.className=wFORMS.className_duplicateLinkHidden;
+
+					// Prepare id suffix
+					var suffix = "-" + rowCount.toString()
 					// duplicate node tree 
 					var dupTree = wFORMS.behaviors['repeat'].replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
 					// find insert point in DOM tree (after existing repeated element)
@@ -162,25 +179,36 @@
 					// Save new row count 			
 					document.getElementById(element.id + wFORMS.idSuffix_repeatCounter).value = rowCount;
 					// re-add wFORMS behaviors
-					wFORMS.addBehaviors(dupTree);
+					wFORMS.addBehaviors(dupTree);					
 				}
 				return wFORMS.helpers.preventEvent(e);
 			},
 			
 		   	removeFieldGroup: function(e) { 
+				
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
 				// Get Element to remove.
 				var element = element.parentNode;
 				while (element && !wFORMS.helpers.hasClass(element,wFORMS.className_delete)) {
 					element = element.parentNode;
-				}	
+				}
+				var id = wFORMS.behaviors['repeat'].removeRepeatCountSuffix(element.id);
+				var maxField = document.getElementById(id + wFORMS.idSuffix_maxRepeat);
+				if(maxField) {
+					var maxRow   = parseInt(maxField.value) + 1;
+					maxField.value = maxRow;
+				}
+				var repeatLinkId = id + wFORMS.idSuffix_duplicateLink;
+				var repeatLink = document.getElementById(repeatLinkId);
+				repeatLink.className = wFORMS.className_duplicateLink;
 				element.parentNode.removeChild(element);
 				return wFORMS.helpers.preventEvent(e);
+
 			},	
 			
 			removeRepeatCountSuffix: function(str) {
-				return str.replace(/\[\d\]$/,'');
+				return str.replace(/-\d$/,'');
 			},
 	
 			replicateTree: function(element,parentElement, idSuffix, preserveRadioName) {
@@ -202,7 +230,7 @@
 						return null; 
 					// Adjust row suffix id if we find a nested repeat group 
 					if(wFORMS.helpers.hasClass(element,wFORMS.className_repeat) && parentElement!=null)
-						idSuffix = idSuffix.replace('-','__'); // NOT WORKING W/ PHP's '[]'
+						idSuffix = idSuffix.replace('-','__');
 					
 					if(!document.all || window.opera) { 
 						// Common Branch
@@ -269,8 +297,8 @@
 								if(attribute.nodeName.toLowerCase() == "value" &&
 								   element.tagName.toUpperCase()=='INPUT'      &&  
 								  (element.type.toLowerCase() == 'text'     || 
-								   element.type.toLowerCase() == 'password' || 
 								   element.type.toLowerCase() == 'hidden' ||
+								   element.type.toLowerCase() == 'password' || 
 								   element.type.toLowerCase() == 'file')) 
 									var value='';   
 								// Do not copy the switch behavior's 'event handled' flag, stored in the rel attribute

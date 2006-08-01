@@ -607,10 +607,10 @@ wFORMS.arrMsg[2]="Remove";
 wFORMS.arrMsg[3]="Will remove this question or section.";
 wFORMS.behaviors["repeat"]={evaluate:function(_7a){
 if(wFORMS.helpers.hasClass(_7a,wFORMS.className_repeat)){
-var _7b;
-if(_7a.id){
-_7b=document.getElementById(_7a.id+wFORMS.idSuffix_duplicateLink);
+if(!_7a.id){
+_7a.id=wFORMS.helpers.randomId();
 }
+var _7b=document.getElementById(_7a.id+wFORMS.idSuffix_duplicateLink);
 if(!_7b){
 _7b=document.createElement("a");
 var _7c=document.createElement("span");
@@ -784,7 +784,7 @@ var _95=_94.nodeValue+_8f;
 }
 }
 }else{
-if(_94.nodeName.toLowerCase()=="value"&&_8d.tagName.toUpperCase()=="INPUT"&&(_8d.type.toLowerCase()=="text"||_8d.type.toLowerCase()=="password"||_8d.type.toLowerCase()=="file")){
+if(_94.nodeName.toLowerCase()=="value"&&_8d.tagName.toUpperCase()=="INPUT"&&(_8d.type.toLowerCase()=="text"||_8d.type.toLowerCase()=="password"||_8d.type.toLowerCase()=="hidden"||_8d.type.toLowerCase()=="file")){
 var _95="";
 }else{
 if(_94.nodeName.toLowerCase()=="rel"&&_94.nodeValue.indexOf("wfHandled")!=-1){

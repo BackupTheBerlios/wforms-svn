@@ -31,10 +31,11 @@
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_repeat)) {
 					//wFORMS.debug('evaluate/repeat: '+ node.id,3);
 				   
+					 if(!node.id) 
+						node.id = wFORMS.helpers.randomId();
+						
 					// Check if we have a 'repeat' link
-					var repeatLink;
-					if(node.id) 
-						repeatLink = document.getElementById(node.id + wFORMS.idSuffix_duplicateLink);
+					var repeatLink = document.getElementById(node.id + wFORMS.idSuffix_duplicateLink);
 					if(!repeatLink) {				
 						// create the repeat link
 						repeatLink   = document.createElement("a"); 
@@ -266,6 +267,7 @@
 								   element.tagName.toUpperCase()=='INPUT'      &&  
 								  (element.type.toLowerCase() == 'text'     || 
 								   element.type.toLowerCase() == 'password' || 
+								   element.type.toLowerCase() == 'hidden' ||
 								   element.type.toLowerCase() == 'file')) 
 									var value='';   
 								// Do not copy the switch behavior's 'event handled' flag, stored in the rel attribute
