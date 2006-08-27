@@ -1,0 +1,57 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>wForms 2.0 Example - onblur validation</title>
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>  
+   <script type="text/javascript" src="../src/wforms_validation.js" ></script>
+   <script type="text/javascript" src="../src/wforms_onblur_validation.js" ></script> 
+   <script type="text/javascript">
+   	wFORMS.debugLevel=1;
+   </script>
+</head>
+<body>
+<form method="post" action="" name="Application Form - Initial Issue" id="wf_ApplicationForm-I">
+  <h2>OnBlur Validation Test</h2>
+  <fieldset id="fieldset1">
+    <legend>Text Input - Text Inputs</legend>
+
+    <label for="text1" class="preField">Required Field</label>
+    <input type="text" id="text1" name="text1" value="" size="" class="required"/>
+    <br/>
+    <label for="text2" class="preField">Email</label>
+    <input type="text" id="text2" name="text2" value="" size="" class="validate-email"/>
+
+    <br/>
+    <label for="text3" class="preField">Alphabetic characters only:</label>
+    <input type="text" id="text3" name="text3" value="" size="" class="validate-alpha"/>
+    <br/>
+  </fieldset>
+  <fieldset id="fieldset2" class="required">
+    <legend>One Required</legend>
+
+    <select id="select1" name="select1">
+	  <option class="" value="yes">Choice 1</option>
+	  <option class="" value="yes">Choice 2</option>
+	  <option class="" value="yes">Choice 3</option>
+	</select>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="" id="radio1" name="radio1"/>
+      <label for="radio1" class="postField">Choice 1</label>
+    </span>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="" id="radio2" name="radio1"/>
+      <label for="radio2" class="postField">Choice 2</label>
+    </span>
+    <span class="oneChoice">
+      <input type="radio" value="yes" class="" id="radio3" name="radio1"/>
+
+      <label for="radio3" class="postField">Choice 3</label>
+    </span>
+    <br/>
+  </fieldset>
+  <input type="submit" class="primaryAction" value="submit"/>
+</form>
+</body>
+</html>

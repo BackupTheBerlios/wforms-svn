@@ -1,6 +1,6 @@
 ﻿// Localization for wForms - a javascript extension to web forms.
 // Swedish  v2.0 - July 18th 2006
-// Thanks to Pär Axelsson
+// Thanks to Pär Axelsson and Martin Heijenskjöld
 //
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
@@ -20,7 +20,7 @@ wFORMS.behaviors['validation'].errMsg_float        = "Ange ett decimaltal (t ex 
 wFORMS.behaviors['validation'].errMsg_password     = "";
 wFORMS.behaviors['validation'].errMsg_alphanum     = "Endast alfanumeriska tecken tillåts (a-z 0-9).";
 wFORMS.behaviors['validation'].errMsg_date         = "Detta ser inte ut som ett giltigt datum.";
-wFORMS.behaviors['validation'].errMsg_notification = "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."; // %% will be replaced by the actual number of errors.
+wFORMS.behaviors['validation'].errMsg_notification = "%% fel upptäcktes. Formuläret har inte skickats ännu.\nVänligen gå igenom formuläret igen."; // %% will be replaced by the actual number of errors.
 
 wf.arrMsg[0] = "Lägg till ett svar"; // repeat link
 wf.arrMsg[1] = "" // title attribute on the repeat link
