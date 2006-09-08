@@ -27,6 +27,9 @@
 		
 		wFORMS.behaviors['repeat'] = {
 
+			onRepeat: null, /* Function to run after the element is repeated */
+			onRemove: null, /* Function to run after the element is removed  */
+			
 		   	// ------------------------------------------------------------------------------------------
 		   	// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   	// ------------------------------------------------------------------------------------------
@@ -180,6 +183,9 @@
 					document.getElementById(element.id + wFORMS.idSuffix_repeatCounter).value = rowCount;
 					// re-add wFORMS behaviors
 					wFORMS.addBehaviors(dupTree);					
+					
+					if(wFORMS.behaviors['repeat'].onRepeat)
+						wFORMS.behaviors['repeat'].onRepeat(element,dupTree);
 				}
 				return wFORMS.helpers.preventEvent(e);
 			},
@@ -203,6 +209,8 @@
 				var repeatLink = document.getElementById(repeatLinkId);
 				repeatLink.className = wFORMS.className_duplicateLink;
 				element.parentNode.removeChild(element);
+				if(wFORMS.behaviors['repeat'].onRemove)
+						wFORMS.behaviors['repeat'].onRemove(element);
 				return wFORMS.helpers.preventEvent(e);
 
 			},	
@@ -297,8 +305,8 @@
 								if(attribute.nodeName.toLowerCase() == "value" &&
 								   element.tagName.toUpperCase()=='INPUT'      &&  
 								  (element.type.toLowerCase() == 'text'     || 
-								   element.type.toLowerCase() == 'hidden' ||
 								   element.type.toLowerCase() == 'password' || 
+								   element.type.toLowerCase() == 'hidden' ||
 								   element.type.toLowerCase() == 'file')) 
 									var value='';   
 								// Do not copy the switch behavior's 'event handled' flag, stored in the rel attribute

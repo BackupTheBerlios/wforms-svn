@@ -5,6 +5,7 @@
    if(wFORMS) {
 		// Component properties 
 		// wFORMS.functionName_formValidation  is defined at the bottom of this file
+		// Those should be moved inside wFORMS.behaviors['validation']. Stays here for now for backward compatibility
        	wFORMS.preventSubmissionOnEnter   		= false; 			// prevents submission when pressing the 'enter' key. Set to true if pagination behavior is used.
 	   	wFORMS.showAlertOnError 			  	= true; 			// sets to false to not show the alert when a validation error occurs.
 		wFORMS.className_required 			 	= "required";
@@ -26,6 +27,9 @@
 			errMsg_date 		: "This does not appear to be a valid date.",
 			errMsg_notification : "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",  // %% will be replaced by the actual number of errors.
 			errMsg_custom		: "Please enter a valid value.",
+			
+			// Class Names
+			className_allRequired : "allrequired",
 			
 			// first page w/ error in a multi-page form
 			jumpToErrorOnPage : null,
@@ -223,11 +227,9 @@
 			
 			// ------------------------------------------------------------------------------------------
 			checkRequired: function(element) {
-										
+				var wBehavior = wFORMS.behaviors['validation'];		// shortcut				
+
 				if(wFORMS.helpers.hasClass(element,wFORMS.className_required)) {
-
-					var wBehavior = wFORMS.behaviors['validation'];		// shortcut
-
 					switch(element.tagName.toUpperCase()) {
 						case "INPUT":
 							var inputType = element.getAttribute("type");
@@ -253,42 +255,74 @@
 							return wBehavior.checkOneRequired(element);
 							break;
 					} 	
-				} 
+				} else if(wFORMS.helpers.hasClass(element,wBehavior.className_allRequired)) {
+					return wBehavior.checkAllRequired(element);
+				}
 				return true;
 			},
 			checkOneRequired: function(element) {	
-
-				var value = false;
 				if(element.nodeType != 1) return false;
-				if(element.tagName.toUpperCase() == "INPUT") {
-					var inputType = element.getAttribute("type");
-					if(!inputType) inputType = 'text'; // handles lame markup
+				var tagName = element.tagName.toUpperCase();
+				var wBehavior = wFORMS.behaviors['validation'];
 				
-					switch(inputType.toLowerCase()) {
-						case "checkbox":
-							value = element.checked; 
-							break;
-						case "radio":
-							value = element.checked; 
-							break;
-						default:
-							value = element.value;
-					}
-				} else if(element.tagName.toUpperCase() == "SELECT") {
-					value = element.options[element.selectedIndex].value
-				} else if(element.tagName.toUpperCase() == "TEXTAREA") {
-					value = element.value;
-				}
-
-				if(value && !wFORMS.behaviors['validation'].isEmpty(value)) {
-					return true;
+				if(tagName == "INPUT" || tagName == "SELECT" || tagName == "TEXTAREA" ) {
+					var value = wBehavior.getFieldValue(element);	
+					if(!wBehavior.isEmpty(value)) {					
+						return true;
+					}			
 				}
 				for(var i=0; i<element.childNodes.length;i++) {
-					if(wFORMS.behaviors['validation'].checkOneRequired(element.childNodes[i])) return true;
+					if(wBehavior.checkOneRequired(element.childNodes[i])) return true;
 				}
 				return false;
 			},
+			checkAllRequired: function(element)	{
 				
+				if(element.nodeType != 1) return true;
+				var tagName = element.tagName.toUpperCase();
+				var wBehavior = wFORMS.behaviors['validation'];
+
+				if(tagName == "INPUT" || tagName == "SELECT" || tagName == "TEXTAREA" ) {
+					var value = wBehavior.getFieldValue(element);	
+					if(wBehavior.isEmpty(value)) {					
+						return false;
+					}			
+				}
+				for(var i=0; i<element.childNodes.length;i++) {
+					if(!wBehavior.checkAllRequired(element.childNodes[i])) return false;
+				}
+				return true;
+			},
+			getFieldValue: function(element) {
+				var value = null;
+				if(element && element.tagName) {
+					if(element.tagName.toUpperCase() == "INPUT") {
+						var inputType = element.getAttribute("type");
+						if(!inputType) inputType = 'text'; // handles lame markup
+					
+						switch(inputType.toLowerCase()) {
+							case "checkbox": 
+								value = element.checked?element.value:null; 
+								break;
+							case "radio":								
+								var radioGroup = element.form[element.name]; 							
+								for (var i = 0; i< radioGroup.length; i++) {
+								    if (radioGroup[i].checked) {
+								       value = radioGroup[i].value;
+								    }
+								} 								
+								break;
+							default:
+								value = element.value;
+						}
+					} else if(element.tagName.toUpperCase() == "SELECT") {
+						value = element.options[element.selectedIndex].value						
+					} else if(element.tagName.toUpperCase() == "TEXTAREA") {
+						value = element.value;
+					}
+				}
+				return value;
+			},
 			// ------------------------------------------------------------------------------------------
 			isEmpty: function(s) {
 				var regexpWhitespace = /^\s+$/;
@@ -362,7 +396,9 @@
 				var rErrClass     = new RegExp(wFORMS.className_validationError_fld,"gi");
 				element.className = element.className.replace(rErrClass,"");
 				var errorMessage  = document.getElementById(element.id + wFORMS.idSuffix_fieldError);
-				if(errorMessage)  errorMessage.parentNode.removeChild(errorMessage);
+				if(errorMessage)  {				
+					errorMessage.innerHTML="";
+				}
 			}
 					
        } // End wFORMS.behaviors['validation']

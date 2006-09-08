@@ -41,12 +41,10 @@ label, form .label {
 	font-size: small;
 }
 label.preField {
-	display: -moz-inline-box;
-	display: inline-block;	
-	width: expression('9em'); /* Min-width for IE6 */
-	min-width: 9em;
-	padding: 0 2px;
-	margin: 0.6em 4px 0 0;
+	display: block;
+	
+	margin: 1em 0 0.5em 0;
+	border-bottom: 1px dotted #444;
 }
 label.postField  {
 	margin: 0 4px;
@@ -92,12 +90,12 @@ form .errMsg {
 	color: #CC3333 !important;
 	display: block;
 }
-/* Field-Hint with focus */
+/* Field-Hint with focus (shown as a tooltip) */
 form .field-hint {
 	position: absolute;
 	width: 180px;
 	z-index: 50;
-	background-image: url(/images/v2/hint_topborder.gif);
+	background-image: url(images/hint_topborder.gif);
 	background-repeat: no-repeat;
 	background-position: left top;	
 	padding: 14px 0 0 0;

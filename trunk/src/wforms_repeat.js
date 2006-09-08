@@ -21,7 +21,11 @@
 		wFORMS.arrMsg[3] 					= "Will remove this question or section." 	 // title attribute on the remove link
 		
 		wFORMS.behaviors['repeat'] = {
-
+			
+			onRepeat: null, /* Function to run after the element is repeated */
+			onRemove: null, /* Function to run after the element is removed  */
+			allowRepeat: null, /* Function for fine control on repeatable section */
+			
 		   	// ------------------------------------------------------------------------------------------
 		   	// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   	// ------------------------------------------------------------------------------------------
@@ -134,6 +138,13 @@
 					element = element.parentNode;
 				}	
 				if (element) {
+					var wBehavior = wFORMS.behaviors['repeat']; // shortcut
+					
+					// Check if we have a custom function that prevents the repeat
+					if(wBehavior.allowRepeat) {						
+						if(!wBehavior.allowRepeat(element)) return false;
+					}
+					
 					// Extract row counter information
 					counterField = document.getElementById(element.id + wFORMS.idSuffix_repeatCounter);
 					if(!counterField) return; // should not happen.
@@ -141,7 +152,7 @@
 					// Prepare id suffix
 					var suffix = "-" + rowCount.toString()
 					// duplicate node tree 
-					var dupTree = wFORMS.behaviors['repeat'].replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
+					var dupTree = wBehavior.replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
 					// find insert point in DOM tree (after existing repeated element)
 					var insertNode = element.nextSibling;
 					
@@ -160,7 +171,12 @@
 					document.getElementById(element.id + wFORMS.idSuffix_repeatCounter).value = rowCount;
 					// re-add wFORMS behaviors
 					wFORMS.addBehaviors(dupTree);
+					
+					if(wBehavior.onRepeat)
+						wBehavior.onRepeat(element,dupTree);
 				}
+				
+				
 				return wFORMS.helpers.preventEvent(e);
 			},
 			
@@ -173,6 +189,8 @@
 					element = element.parentNode;
 				}	
 				element.parentNode.removeChild(element);
+				if(wFORMS.behaviors['repeat'].onRemove)
+						wFORMS.behaviors['repeat'].onRemove(element);
 				return wFORMS.helpers.preventEvent(e);
 			},	
 			

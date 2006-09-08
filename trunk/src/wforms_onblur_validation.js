@@ -1,5 +1,7 @@
 // ------------------------------------------------------------------------------------------
 // Form On-Blur Validation Behavior
+// Runs the validation when the user leaves a field (onblur event)
+// Requires the wForms validation behavior.
 // ------------------------------------------------------------------------------------------
   
    if(wFORMS) {

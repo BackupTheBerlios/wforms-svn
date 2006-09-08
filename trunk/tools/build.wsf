@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="ISO-8859-1" ?>
+﻿<?xml version="1.0" encoding="ISO-8859-1" ?>
 <job id="wForms.Build">
 	<script language="JScript">
 	<![CDATA[
@@ -25,8 +25,7 @@
 		"wforms_paging",
 		"wforms_repeat",
 		"wforms_switch",
-		"wforms_validation",
-		"wforms_sync"
+		"wforms_validation"
 	];
 
 	var buildID = (new Date()).toUTCString();
