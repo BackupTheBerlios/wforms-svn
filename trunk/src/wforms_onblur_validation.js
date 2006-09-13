@@ -55,7 +55,7 @@
 			// remove: executed if the behavior should not be applied anymore
 			// ------------------------------------------------------------------------------------------
 			remove: function() {
-			},
+			}
 		   
    }
 }
