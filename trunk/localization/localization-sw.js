@@ -36,6 +36,6 @@ wf.isAlpha = function(s) {
 }
 
 wf.isAlphaNum = function(s) {
-	var reg = /^[\u0030-\u0039\u0041-\u007A\u0100-\u017F]+$/;
+	var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
 	return this.isEmpty(s) || reg.test(s);
 }
