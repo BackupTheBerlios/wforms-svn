@@ -20,7 +20,7 @@ wFORMS.behaviors['validation'].errMsg_float        = "Venligst tast et tal. Anve
 wFORMS.behaviors['validation'].errMsg_password     = "";
 wFORMS.behaviors['validation'].errMsg_alphanum     = "Brug venligst kun bogstaver eller tal (a-z, 0-9).";
 wFORMS.behaviors['validation'].errMsg_date         = "Dette lader ikke til at være en gyldig dato. (F.eks. 2006-12-24 for 24. dec 2006)";
-//wFORMS.behaviors['validation'].errMsg_notification = ""; // %% will be replaced by the actual number of errors.
+wFORMS.behaviors['validation'].errMsg_notification = "Der opstod %% fejl. Din formular er ikke afsendt.\nVenligst undersøg at alle informationer er korrekt udfyldt."; // %% will be replaced by the actual number of errors.
 
 wf.arrMsg[0] = "Tilføj endnu et svar"; // repeat link
 wf.arrMsg[1] = "" // title attribute on the repeat link
