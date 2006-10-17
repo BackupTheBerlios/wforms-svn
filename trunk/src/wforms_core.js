@@ -296,7 +296,7 @@ if (!Array.prototype.push) {
   };
   
   wFORMS.NAME     = "wForms";
-  wFORMS.VERSION  = "2.1";
+  wFORMS.VERSION  = "2.0";
   wFORMS.__repr__ = function () {
 	return "[" + this.NAME + " " + this.VERSION + "]";
   };

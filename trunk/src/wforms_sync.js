@@ -56,9 +56,9 @@
 							if(!selectNode.id) selectNode.id = wFORMS.helpers.randomId();
 
 							// Make sure we have only one event handler for the select.
-							if(!selectNode.getAttribute('rel') || selectNode.getAttribute('rel').indexOf('wfHandled')==-1) {
+							if(!selectNode.getAttribute('rel') || selectNode.getAttribute('rel').indexOf('wfHandledSync')==-1) {
 								//wFORMS.debug('sync/add event: '+ selectNode.className + ' ' + selectNode.tagName);
-								selectNode.setAttribute('rel', (selectNode.getAttribute('rel')||"") + ' wfHandled');
+								selectNode.setAttribute('rel', (selectNode.getAttribute('rel')||"") + ' wfHandledSync');
 								wFORMS.helpers.addEvent(selectNode, 'change', wFORMS.behaviors['sync'].run);
 							}							
 							break;
@@ -72,10 +72,10 @@
 									// prevents conflicts with elements with an id = name of radio group
 									if(radioNode.type.toLowerCase() == 'radio') {
 										// Make sure we have only one event handler for this radio input.
-										if(!radioNode.getAttribute('rel') || radioNode.getAttribute('rel').indexOf('wfHandled')==-1) {								
+										if(!radioNode.getAttribute('rel') || radioNode.getAttribute('rel').indexOf('wfHandledSync')==-1) {								
 											wFORMS.helpers.addEvent(radioNode, 'click', wFORMS.behaviors['sync'].run);
 											// flag the node 
-											radioNode.setAttribute('rel', (radioNode.getAttribute('rel')||"") + ' wfHandled');
+											radioNode.setAttribute('rel', (radioNode.getAttribute('rel')||"") + ' wfHandledSync');
 										} 
 									}
 								}

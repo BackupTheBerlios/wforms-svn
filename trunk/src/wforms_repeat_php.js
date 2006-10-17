@@ -1,8 +1,6 @@
-// wForms - a javascript extension to web forms.
-// Form Validation Component
-// v2.0 beta - Feb.14th 2006
-// This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
-    
+// ------------------------------------------------------------------------------------------
+// Repeat Behavior (using PHP array syntax)
+// ------------------------------------------------------------------------------------------
     
    if(wFORMS) {
 		// Component properties 
@@ -24,6 +22,10 @@
 		
 		wFORMS.behaviors['repeat'] = {
 
+			onRepeat: null, /* Function to run after the element is repeated */
+			onRemove: null, 	/* Function to run after the element is removed  */
+			allowRepeat: null, /* Function for fine control on repeatable section */
+			
 		   	// ------------------------------------------------------------------------------------------
 		   	// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   	// ------------------------------------------------------------------------------------------
@@ -33,7 +35,6 @@
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_repeat)) {
 					//wFORMS.debug('evaluate/repeat: '+ node.id,3);
 				   
-					// Check if we have a 'repeat' link
 					if(!node.id) 
 						node.id = wFORMS.helpers.randomId();
 						
@@ -124,6 +125,7 @@
            	},
 
 		   	duplicateFieldGroup: function(e) {
+		   					
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
 				
@@ -137,6 +139,13 @@
 					element = element.parentNode;
 				}	
 				if (element) {
+					var wBehavior = wFORMS.behaviors['repeat']; // shortcut
+					
+					// Check if we have a custom function that prevents the repeat
+					if(wBehavior.allowRepeat) {						
+						if(!wBehavior.allowRepeat(element)) return false;
+					}
+					
 					// Extract row counter information
 					counterField = document.getElementById(element.id + wFORMS.idSuffix_repeatCounter);
 					if(!counterField) return; // should not happen.
@@ -144,7 +153,7 @@
 					// Prepare id suffix (PHP Version)
 					var suffix = "[" + rowCount.toString() + "]";
 					// duplicate node tree 
-					var dupTree = wFORMS.behaviors['repeat'].replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
+					var dupTree = wBehavior.replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
 					// find insert point in DOM tree (after existing repeated element)
 					var insertNode = element.nextSibling;
 					
@@ -163,7 +172,11 @@
 					document.getElementById(element.id + wFORMS.idSuffix_repeatCounter).value = rowCount;
 					// re-add wFORMS behaviors
 					wFORMS.addBehaviors(dupTree);
+					
+					if(wBehavior.onRepeat)
+						wBehavior.onRepeat(element,dupTree);
 				}
+				
 				return wFORMS.helpers.preventEvent(e);
 			},
 			
@@ -176,11 +189,13 @@
 					element = element.parentNode;
 				}	
 				element.parentNode.removeChild(element);
+				if(wFORMS.behaviors['repeat'].onRemove)
+						wFORMS.behaviors['repeat'].onRemove(element);
 				return wFORMS.helpers.preventEvent(e);
 			},	
 			
 			removeRepeatCountSuffix: function(str) {
-				return str.replace(/\[\d\]$/,'');
+				return str.replace(/\[\d+\]$/,'');
 			},
 	
 			replicateTree: function(element,parentElement, idSuffix, preserveRadioName) {

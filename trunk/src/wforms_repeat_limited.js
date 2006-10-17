@@ -132,6 +132,7 @@
            	},
 
 		   	duplicateFieldGroup: function(e) {
+		   		
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
 				
@@ -216,7 +217,7 @@
 			},	
 			
 			removeRepeatCountSuffix: function(str) {
-				return str.replace(/-\d$/,'');
+				return str.replace(/-\d+$/,'');
 			},
 	
 			replicateTree: function(element,parentElement, idSuffix, preserveRadioName) {

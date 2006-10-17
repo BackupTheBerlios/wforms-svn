@@ -23,7 +23,7 @@
 		wFORMS.behaviors['repeat'] = {
 			
 			onRepeat: null, /* Function to run after the element is repeated */
-			onRemove: null, /* Function to run after the element is removed  */
+			onRemove: null, 	/* Function to run after the element is removed  */
 			allowRepeat: null, /* Function for fine control on repeatable section */
 			
 		   	// ------------------------------------------------------------------------------------------
@@ -125,6 +125,7 @@
            	},
 
 		   	duplicateFieldGroup: function(e) {
+		   					
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e
 				
@@ -174,8 +175,7 @@
 					
 					if(wBehavior.onRepeat)
 						wBehavior.onRepeat(element,dupTree);
-				}
-				
+				}				
 				
 				return wFORMS.helpers.preventEvent(e);
 			},
@@ -195,7 +195,7 @@
 			},	
 			
 			removeRepeatCountSuffix: function(str) {
-				return str.replace(/-\d$/,'');
+				return str.replace(/-\d+$/,'');
 			},
 	
 			replicateTree: function(element,parentElement, idSuffix, preserveRadioName) {
