@@ -362,9 +362,9 @@
 			// Error Alert Functions
 			// ------------------------------------------------------------------------------------------		
 			showError: function (element,errorMsg) {		
-				if(wFORMS.helpers.hasClass(element,wFORMS.className_validationError_fld)) {
-					wFORMS.behaviors['validation'].removeErrorMessage(element);
-				}
+				// remove existing error message if any.
+				wFORMS.behaviors['validation'].removeErrorMessage(element);
+				
 				if (!element.id) element.id = wFORMS.helpers.randomId(); // we'll need an id here.		
 				// Add error flag to the field
 				element.className += " " + wFORMS.className_validationError_fld;
@@ -393,11 +393,13 @@
 			},
 			
 			removeErrorMessage: function(element) {
-				var rErrClass     = new RegExp(wFORMS.className_validationError_fld,"gi");
-				element.className = element.className.replace(rErrClass,"");
-				var errorMessage  = document.getElementById(element.id + wFORMS.idSuffix_fieldError);
-				if(errorMessage)  {				
-					errorMessage.innerHTML="";
+				if(wFORMS.helpers.hasClass(element,wFORMS.className_validationError_fld)) {
+					var rErrClass     = new RegExp(wFORMS.className_validationError_fld,"gi");
+					element.className = element.className.replace(rErrClass,"");
+					var errorMessage  = document.getElementById(element.id + wFORMS.idSuffix_fieldError);
+					if(errorMessage)  {				
+						errorMessage.innerHTML=""; 
+					}
 				}
 			}
 					
