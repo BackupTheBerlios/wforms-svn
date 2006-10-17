@@ -39,10 +39,17 @@
 				var element  = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e;
 				wFORMS.debug('onblur_validation/run: ' + element.id , 5);	
-							
-				var nbErrors = wFORMS.behaviors['validation'].validateElement(element, false, true);
 				
-				// save the value in a property if someone else needs it.
+				var nbErrors = 0;
+				var deepValidation = true;
+				while(element && element.nodeName!='FORM') {			
+					nbErrors += wFORMS.behaviors['validation'].validateElement(element, false, deepValidation);
+					element=element.parentNode; // need to check the ancestors node for 'required' elements
+					deepValidation = false; // only the first time since we're going up.
+           		}	
+				
+				
+				// savethe value in a property if someone else needs it.
 				wFORMS.behaviors['validation'].errorCount = nbErrors;
 				
 				if (nbErrors > 0) {					
