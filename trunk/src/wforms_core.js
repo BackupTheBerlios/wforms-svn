@@ -202,34 +202,35 @@ if (!Array.prototype.push) {
 		 
 		  for (var i=0;i<document.forms.length;i++) {
 			  wFORMS.debug('wForms/initialize: '+ (document.forms[i].name || document.forms[i].id) );
-			  	wFORMS.processedForm = document.forms[i];
 			  wFORMS.addBehaviors(document.forms[i]);
 		  }
 	  },
 	  
 	  addBehaviors : function (node) {
-		 if(!node) return;
-		 
-		 var deep = arguments[1]?arguments[1]:true;
-		 if(!node.nodeType) {
-			 // argument is not a node. probably an id string. 
-			 // (typeof not used for IE5/mac compatibility)
-			 node = document.getElementById(node);
-		 }
-			if(!node || node.nodeType!=1) return;
-			
-			deep=(arguments.length>1)?arguments[1]:true;	
-				   
-			wFORMS._addBehaviors(node, deep);					
-		  },
+		if(!node) return;
+		
+		if(!node.nodeType) {
+			// argument is not a node. probably an id string. 
+			// (typeof not used for IE5/mac compatibility)
+			node = document.getElementById(node);
+		}
+		if(!node || node.nodeType!=1) return;
+		
+		deep=(arguments.length>1)?arguments[1]:true;	
+
+		wFORMS._addBehaviors(node, deep);					
+	  },
 		  
 	  _addBehaviors : function (node, deep) {
 		  if(node.getAttribute('rel')=='no-behavior') {
 		  	return false;
 		  }
-		
 		 // Process element nodes only
 		 if(node.nodeType == 1) { 
+			  if(node.tagName.toUpperCase() == 'FORM') {
+				  wFORMS.processedForm = node;
+			  } 
+		 
 			  for(var behaviorName in wFORMS.behaviors) {
 				  wFORMS.behaviors[behaviorName].evaluate(node);
 			  }
