@@ -11,15 +11,33 @@
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
-			evaluate: function(node) {
+			evaluate: function(node) {				
 				if (wFORMS.helpers.hasClassPrefix(node,wFORMS.classNamePrefix_validation) ||
-				  	wFORMS.helpers.hasClass(node,wFORMS.className_required)) {
+				  	wFORMS.helpers.hasClass(node,wFORMS.className_required) || 
+				  	(arguments.length > 1 && arguments[1]==true)) { /* this is used to force the evaluation to add the events to fields nested within a required section */				  	  
 					switch(node.tagName.toUpperCase()) {
 						case 'INPUT':
+							switch(node.type) {
+								case 'radio':
+								case 'checkbox':
+									wFORMS.helpers.addEvent(node,'click', wFORMS.behaviors['onblur_validation'].run);
+									break;
+								default:
+									wFORMS.helpers.addEvent(node,'blur', wFORMS.behaviors['onblur_validation'].run);
+									break;
+							}
+							break;
 						case 'SELECT':
 						case 'TEXTAREA':						
 		                   	wFORMS.helpers.addEvent(node,'blur', wFORMS.behaviors['onblur_validation'].run);
 							wFORMS.debug('onblur_validation/evaluate: '+ node.id,3);
+							break;
+						default:
+							// Not a form field. Required rule is applied on an element containing several fields.
+							for(var i=0;i<node.childNodes.length;i++) {								
+								if(node.childNodes[i].nodeType==1)
+									wFORMS.behaviors['onblur_validation'].evaluate(node.childNodes[i],true);
+							}
 							break;
 					}
 						

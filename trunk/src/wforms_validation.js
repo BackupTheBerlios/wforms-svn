@@ -108,7 +108,7 @@
 			// ------------------------------------------------------------------------------------------
 			validateElement: function(element /*, currentPageOnly, deep */) {
 
-				var deep = arguments[2] ? arguments[2] : true;
+				var deep = arguments.length>2 ? arguments[2] : true;
 				
 				// used in multi-page forms
 				var currentPageOnly = arguments[1] ? arguments[1] : false;				
