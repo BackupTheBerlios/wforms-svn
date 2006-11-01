@@ -245,8 +245,12 @@
 									return !wBehavior.isEmpty(element.value);
 							}
 							break;
-						case "SELECT":
-							return !wBehavior.isEmpty(element.options[element.selectedIndex].value);
+						case "SELECT":							
+							if(element.selectedIndex==-1) {
+								// multiple select with no selection
+								return false;
+							} else 												
+								return !wBehavior.isEmpty(element.options[element.selectedIndex].value);
 							break;
 						case "TEXTAREA":
 							return !wBehavior.isEmpty(element.value);
@@ -308,15 +312,19 @@
 								var radioGroup = element.form[element.name]; 							
 								for (var i = 0; i< radioGroup.length; i++) {
 								    if (radioGroup[i].checked) {
-								       value = radioGroup[i].value;
+								    	if(!value) value = new Array();
+										value[value.length] = radioGroup[i].value;
 								    }
 								} 								
 								break;
 							default:
 								value = element.value;
 						}
-					} else if(element.tagName.toUpperCase() == "SELECT") {
-						value = element.options[element.selectedIndex].value						
+					} else if(element.tagName.toUpperCase() == "SELECT") {	
+						if(element.selectedIndex!=-1)																
+							value = element.options[element.selectedIndex].value						
+						else
+							value = null; // multiple select with no selection
 					} else if(element.tagName.toUpperCase() == "TEXTAREA") {
 						value = element.value;
 					}
@@ -324,7 +332,7 @@
 				return value;
 			},
 			// ------------------------------------------------------------------------------------------
-			isEmpty: function(s) {
+			isEmpty: function(s) {				
 				var regexpWhitespace = /^\s+$/;
 				return  ((s == null) || (s.length == 0) || regexpWhitespace.test(s));
 			},
