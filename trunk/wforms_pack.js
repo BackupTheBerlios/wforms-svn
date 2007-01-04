@@ -416,6 +416,7 @@ wFORMS.behaviors["paging"].showSubmitButton(_45);
 if(wFORMS.behaviors["paging"].onPageChange){
 wFORMS.behaviors["paging"].onPageChange(_44);
 }
+window.scroll(0,0);
 }
 }
 },pagingPrevious:function(e){
@@ -434,6 +435,7 @@ wFORMS.behaviors["paging"].hideSubmitButton(_4b);
 if(wFORMS.behaviors["paging"].onPageChange){
 wFORMS.behaviors["paging"].onPageChange(_4a);
 }
+window.scroll(0,0);
 }
 },showSubmitButton:function(_4c){
 var _4d=_4c.getElementsByTagName("input");

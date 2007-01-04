@@ -122,6 +122,7 @@
 						if(wFORMS.behaviors['paging'].onPageChange) {
 							wFORMS.behaviors['paging'].onPageChange(nextPageElement);
 						}
+						window.scroll(0,0);
 					}					
 				}
 			},
@@ -149,6 +150,7 @@
 					if(wFORMS.behaviors['paging'].onPageChange) {
 						wFORMS.behaviors['paging'].onPageChange(previousPageElement);
 					}
+					window.scroll(0,0);
 				}
 			},
 			// ------------------------------------------------------------------------------------------
