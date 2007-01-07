@@ -35,6 +35,9 @@
 			jumpToErrorOnPage : null,
 			currentPageIndex  : -1,
 			
+			// do not submit fields turned off by switch behavior
+			submitSwitchedOffFields : false,
+			
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
@@ -118,6 +121,10 @@
 				// do not validate elements that are in a OFF-Switch
 				// Note: what happens if an element is the target of 2+ switches, some ON and some OFF ?
 				if(wFORMS.hasBehavior('switch') && wFORMS.helpers.hasClassPrefix(element,wFORMS.classNamePrefix_offState)) {
+					if(!wBehavior.submitSwitchedOffFields) {
+						while(element.childNodes[0]) 
+							element.removeChild(element.childNodes[0]);
+					}
 					return 0;
 				}
 				// do not validate elements that are not in the current page (Paging Behavior)

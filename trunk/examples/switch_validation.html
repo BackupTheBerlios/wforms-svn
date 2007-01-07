@@ -1,0 +1,96 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>wForms 2.0 Example - input validation</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+ 
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>  
+   <script type="text/javascript" src="../src/wforms_validation.js" ></script>
+   <script type="text/javascript" src="../src/wforms_switch.js" ></script> 
+   <script type="text/javascript">
+   	wFORMS.debugLevel=1;
+	wFORMS.behaviors.validation.submitSwitchedOffFields = false; // default=false
+   </script>
+</head>
+<body>
+<form method="post" action="http://www.formassembly.com/wForms/dummy-form-processor.php" id="wf_ApplicationForm-I">
+  <h2>Conditional Input Validation Examples</h2>
+  <p>References: <a href="http://www.formassembly.com/wForms">wForms Library</a>, <a href="http://www.formassembly.com/wForms/v2.0/documentation/input-validation.php">Input Validation Documentation</a></p>
+
+
+  <fieldset id="fieldset">
+    <legend>Example 1</legend>
+
+    <span class="oneChoice">
+      <input type="radio" value="a" class="switch-a" id="radio1" name="radio1" checked="checked" />
+      <label for="radio1" class="postField">Show Section A</label>
+    </span>
+    <span class="oneChoice">
+      <input type="radio" value="b" class="switch-b" id="radio2" name="radio1"/>
+      <label for="radio2" class="postField">Show Section B</label>
+    </span>
+    <br/>
+
+
+  <fieldset id="fieldset1" class="offstate-a">
+  	<legend>Section A</legend>
+    <label for="text1" class="preField">Required Text Input:</label>
+    <input type="text" id="text1" name="text1" value="default" size="" class="required"/>
+  </fieldset>
+
+  <fieldset id="fieldset2" class="offstate-b">
+  	<legend>Section B</legend>  
+    <label for="text2" class="preField">Non-Required Text Area :</label>
+    <textarea id="text2" name="text2" cols="24" rows="4">Default value</textarea>
+  </fieldset>
+  </fieldset>
+  
+
+  
+  <input type="submit" class="primaryAction" value="submit"/>
+</form>
+
+<form method="post" action="http://www.formassembly.com/wForms/dummy-form-processor.php" id="wf_TestForm">
+
+
+  <fieldset id="wf_SwitchBehavior" class="">
+    <legend>Example 2</legend>
+    <div class="instructions">The Switch Behavior allows you to show only the relevant parts of a form. Click on &#x27;tag&#x27; to see the effect.</div>
+    <span class="oneField">
+      <span class="label preField">What is your favorite soup ?</span>
+      <span class="required">
+        <span class="oneChoice">
+          <input type="radio" value="wf_Tomato" id="wf_Tomato" name="wf_Whatisyourfavoritesoup"/>
+          <label for="wf_Tomato" class="postField">Tomato</label>
+        </span>
+        <span class="oneChoice">
+          <input type="radio" value="wf_Pea" id="wf_Pea" name="wf_Whatisyourfavoritesoup"/>
+          <label for="wf_Pea" class="postField">Pea</label>
+        </span>
+        <span class="oneChoice">
+          <input type="radio" value="wf_Onion" id="wf_Onion" name="wf_Whatisyourfavoritesoup"/>
+          <label for="wf_Onion" class="postField">Onion</label>
+        </span>
+        <span class="oneChoice">
+          <input type="radio" value="wf_Tag" class="switch-c" id="wf_Tag" name="wf_Whatisyourfavoritesoup"/>
+          <label for="wf_Tag" class="postField">Tag</label>
+        </span>
+      </span>
+     
+      <br/>
+    </span>
+    <fieldset id="wf-TagSoup" class="offstate-c">
+      <legend>Tag Soup</legend>
+	  <span class="oneField required oneChoice">
+		<input type="checkbox" value="yes" id="wf_Ipledgetoquit" name="wf_Ipledgetoquit"/>
+		<label for="wf_Ipledgetoquit" id="wf_Ipledgetoquit-L" class="postField">I pledge to quit</label>
+	  </span>
+    </fieldset>
+  </fieldset>
+    <input type="submit" class="primaryAction" id="submit-wf_TestForm" value="submit"/>
+</form>
+</body>
+</html>

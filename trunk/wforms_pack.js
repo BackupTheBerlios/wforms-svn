@@ -1045,7 +1045,7 @@ wFORMS.className_validationError_msg="errMsg";
 wFORMS.className_validationError_fld="errFld";
 wFORMS.classNamePrefix_validation="validate";
 wFORMS.idSuffix_fieldError="-E";
-wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",className_allRequired:"allrequired",jumpToErrorOnPage:null,currentPageIndex:-1,evaluate:function(_a5){
+wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",className_allRequired:"allrequired",jumpToErrorOnPage:null,currentPageIndex:-1,submitSwitchedOffFields:false,evaluate:function(_a5){
 if(_a5.tagName.toUpperCase()=="FORM"){
 if(wFORMS.functionName_formValidation.toString()==wFORMS.functionName_formValidation){
 wFORMS.functionName_formValidation=eval(wFORMS.functionName_formValidation);
@@ -1086,6 +1086,11 @@ var _ab=arguments.length>2?arguments[2]:true;
 var _ac=arguments[1]?arguments[1]:false;
 var _ad=wFORMS.behaviors["validation"];
 if(wFORMS.hasBehavior("switch")&&wFORMS.helpers.hasClassPrefix(_aa,wFORMS.classNamePrefix_offState)){
+if(!_ad.submitSwitchedOffFields){
+while(_aa.childNodes[0]){
+_aa.removeChild(_aa.childNodes[0]);
+}
+}
 return 0;
 }
 if(wFORMS.hasBehavior("paging")&&wFORMS.helpers.hasClass(_aa,wFORMS.className_paging)){

@@ -1,7 +1,10 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
-   <title>wForms 2.0 Example - onblur validation</title>
+   <title>wForms 2.0 Example - input validation</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+ 
    <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
    <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
    <script type="text/javascript" src="../src/wforms_core.js" ></script>  
@@ -13,23 +16,25 @@
 </head>
 <body>
 <form method="post" action="" name="Application Form - Initial Issue" id="wf_ApplicationForm-I">
-  <h2>Input Validation Test</h2>
+  <h2>Input Validation Examples</h2>
+  <p>References: <a href="http://www.formassembly.com/wForms">wForms Library</a>, <a href="http://www.formassembly.com/wForms/v2.0/documentation/input-validation.php">Input Validation Documentation</a></p>
   <fieldset id="fieldset1">
-    <legend>Text Input - Text Inputs</legend>
+    <legend>Text Inputs</legend>
 
-    <label for="text1" class="preField">Required Field</label>
+    <label for="text1" class="preField">Required Field:</label>
     <input type="text" id="text1" name="text1" value="" size="" class="required"/>
     <br/>
-    <label for="text2" class="preField">Email</label>
+    <label for="text2" class="preField">Email <em>(not required)</em>:</label>
     <input type="text" id="text2" name="text2" value="" size="" class="validate-email"/>
 
     <br/>
-    <label for="text3" class="preField">Alphabetic characters only:</label>
+    <label for="text3" class="preField">Alphabetic characters only <em>(not required)</em>:</label>
     <input type="text" id="text3" name="text3" value="" size="" class="validate-alpha"/>
     <br/>
   </fieldset>
   <fieldset>
-  	<legend>Required Select Input</legend>
+  	<legend>Required Select Inputs</legend>
+
   	<span class="oneField">
       <label for="wf_State" class="preField">State</label>
       <select id="wf_State" name="wf_State" class="required">
@@ -107,75 +112,11 @@
     </span>
     
     <span class="oneField">
-      <label for="wf_Categories3" class="preField">Categories</label>
+      <label for="wf_Categories3" class="preField">Categories  <em>(at least one required)</em></label>
       <select id="wf_Categories3" multiple="multiple" name="wf_Categories3[]" class="required">
         <option value="wf_airheaters3">air heaters</option>
         <option value="wf_analyzers3">analyzers</option>
         <option value="wf_bandheaters3">band heaters</option>
-
-        <option value="wf_blowers3">blowers</option>
-        <option value="wf_burners3">burners</option>
-        <option value="wf_cableheaters3">cable heaters</option>
-        <option value="wf_cartridgeheaters3">cartridge heaters</option>
-        <option value="wf_ceramicfiberheate6">ceramic fiber heaters, cylindrical</option>
-        <option value="wf_ceramicfiberheate7">ceramic fiber heaters, flat</option>
-
-        <option value="wf_circulationheater3">circulation heaters</option>
-        <option value="wf_coilheaters3">coil heaters</option>
-        <option value="wf_compressor3">compressor </option>
-        <option value="wf_crucibles3">crucibles</option>
-        <option value="wf_dampers3">dampers</option>
-        <option value="wf_defroster3">defroster </option>
-
-        <option value="wf_diffusion3">diffusion </option>
-        <option value="wf_drumheaters3">drum heaters</option>
-        <option value="wf_ductheaters3">duct heaters</option>
-        <option value="wf_electric3">electric</option>
-        <option value="wf_electricappliance3">electric appliance</option>
-        <option value="wf_enclosures3">enclosures</option>
-
-        <option value="wf_etchedfoil3">etched foil </option>
-        <option value="wf_explosionproofhea3">explosion proof heaters</option>
-        <option value="wf_filterelements3">filter elements </option>
-        <option value="wf_flexibleheaters1">flexible heaters</option>
-        <option value="wf_fuel1">fuel </option>
-        <option value="wf_furnace1">furnace</option>
-
-        <option value="wf_graphite1">graphite </option>
-        <option value="wf_grilles1">grilles</option>
-        <option value="wf_heattransferfluid1">heat transfer fluids and thermal oils</option>
-        <option value="wf_heatingapparatus1">heating apparatus</option>
-        <option value="wf_heatingcables1">heating cables</option>
-        <option value="wf_heatingelement1">heating element</option>
-
-        <option value="wf_heatingsystems1">heating systems </option>
-        <option value="wf_heatingtapes1">heating tapes</option>
-        <option value="wf_immersionheatersf1">immersion heaters, flange and screw plug</option>
-        <option value="wf_industrialheaters1">industrial heaters, all types</option>
-        <option value="wf_infraredheaters1">infrared heaters</option>
-        <option value="wf_mantles1">mantles</option>
-
-        <option value="wf_mats1">mats</option>
-        <option value="wf_mixers1">mixers</option>
-        <option value="wf_opticalelements1">optical elements </option>
-        <option value="wf_over-the-sideheat1">over-the-side heaters</option>
-        <option value="wf_panels">panels</option>
-        <option value="wf_pins">pins</option>
-
-        <option value="wf_quartz">quartz </option>
-        <option value="wf_radiant">radiant</option>
-        <option value="wf_radiantflatpanelh">radiant flat panel heaters</option>
-        <option value="wf_radiantheaterelem">radiant heater elements</option>
-        <option value="wf_radiantheaters">radiant heaters</option>
-        <option value="wf_rods">rods</option>
-
-        <option value="wf_rolls">rolls</option>
-        <option value="wf_siliconcarbide">silicon carbide </option>
-        <option value="wf_stripheaters">strip heaters</option>
-        <option value="wf_surfaceheaters">surface heaters</option>
-        <option value="wf_torches">torches</option>
-        <option value="wf_traceelements">trace elements</option>
-
         <option value="wf_transducer">transducer</option>
         <option value="wf_tubularheaters">tubular heaters</option>
         <option value="wf_waterheaters">water heaters</option>
@@ -185,8 +126,8 @@
     </span>
   </fieldset>
   <fieldset id="fieldset2" class="required">
-    <legend>One Required</legend>
-
+    <legend>Required Section</legend>
+	<p><em>At least one field is required</em></p>
     <select id="select1" name="select1">
       <option class="" value="" selected="selected">Please select</option>
 	  <option class="" value="yes">Choice 1</option>
