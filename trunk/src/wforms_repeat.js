@@ -42,12 +42,8 @@
 					var repeatLink = document.getElementById(node.id + wFORMS.idSuffix_duplicateLink);
 					if(!repeatLink) {				
 						// create the repeat link
-						repeatLink   = document.createElement("a"); 
-						var spanNode = document.createElement("span");  // could be used for CSS image replacement 
-						var textNode = document.createTextNode(wFORMS.arrMsg[0]);
-						repeatLink.setAttribute('href',"#");	
-						repeatLink.className = wFORMS.className_duplicateLink;			
-						repeatLink.setAttribute('title', wFORMS.arrMsg[1]);	
+						repeatLink = wFORMS.behaviors['repeat'].createRepeatLink(node.id);
+												
 						// find where to insert the link
 						if(node.tagName.toUpperCase()=="TR") {
 							// find the last TD
@@ -59,9 +55,6 @@
 							// Else Couldn't find the TD. Table row malformed ?
 						} else
 							node.appendChild(repeatLink);
-							
-						spanNode.appendChild(textNode); 
-						repeatLink.appendChild(spanNode); 
 					}
 					// Add hidden counter field if necessary
 					var counterField = document.getElementById(node.id + wFORMS.idSuffix_repeatCounter);
@@ -100,12 +93,7 @@
 		 	  	// ------------------------------------------------------------------------------------------
 				// Removeable element
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_delete)) {
-					var removeLink = document.createElement("a");
-					var spanNode   = document.createElement("span");  // could be used for CSS image replacement 
-					var textNode   = document.createTextNode(wFORMS.arrMsg[2]);
-					removeLink.setAttribute('href',"#");	
-					removeLink.className = wFORMS.className_removeLink;
-					removeLink.setAttribute('title',wFORMS.arrMsg[3]);	
+					var removeLink = wFORMS.behaviors['repeat'].createRemoveLink();
 					// find where to insert the link
 					if(node.tagName.toUpperCase()=="TR") {
 						// find the last TD
@@ -117,13 +105,32 @@
 						// Else Couldn't find the TD. Table row malformed ?
 					} else
 						node.appendChild(removeLink);
-					spanNode.appendChild(textNode); 
-					removeLink.appendChild(spanNode); 	
-					wFORMS.helpers.addEvent(removeLink,'click',wFORMS.behaviors['repeat'].removeFieldGroup);			
 				}	
-
            	},
-
+			createRepeatLink: function(id) {
+				var repeatLink = document.createElement("a"); 
+				var spanNode = document.createElement("span");  // could be used for CSS image replacement 
+				var textNode = document.createTextNode(wFORMS.arrMsg[0]);
+				repeatLink.id = id + wFORMS.idSuffix_duplicateLink;	
+				repeatLink.setAttribute('href',"#");	
+				repeatLink.className = wFORMS.className_duplicateLink;			
+				repeatLink.setAttribute('title', wFORMS.arrMsg[1]);	
+				spanNode.appendChild(textNode); 
+				repeatLink.appendChild(spanNode); 
+				return repeatLink;
+			},
+			createRemoveLink: function() {
+				var removeLink = document.createElement("a");
+				var spanNode   = document.createElement("span");  // could be used for CSS image replacement 
+				var textNode   = document.createTextNode(wFORMS.arrMsg[2]);
+				removeLink.setAttribute('href',"#");	
+				removeLink.className = wFORMS.className_removeLink;
+				removeLink.setAttribute('title',wFORMS.arrMsg[3]);	
+				spanNode.appendChild(textNode); 
+				removeLink.appendChild(spanNode);
+				wFORMS.helpers.addEvent(removeLink,'click',wFORMS.behaviors['repeat'].removeFieldGroup);
+				return removeLink;
+			},
 		   	duplicateFieldGroup: function(e) {
 		   					
 				var element  = wFORMS.helpers.getSourceElement(e);
@@ -133,11 +140,14 @@
 				var preserveRadioName = wFORMS.helpers.hasClass(element,wFORMS.className_preserveRadioName) ? true : wFORMS.preserveRadioName;
 				//wFORMS.debug('preserveRadioName='+preserveRadioName);
 				
-				// Get Element to duplicate.
-				var element = element.parentNode;
-				while (element && !wFORMS.helpers.hasClass(element,wFORMS.className_repeat)) {
+				// Get Element to duplicate.				
+				while (element && !wFORMS.helpers.hasClass(element,wFORMS.className_duplicateLink)) {
 					element = element.parentNode;
 				}	
+				var idOfRepeatedSection = element.id.replace(wFORMS.idSuffix_duplicateLink,"");
+				var element = document.getElementById(idOfRepeatedSection); 
+				
+				
 				if (element) {
 					var wBehavior = wFORMS.behaviors['repeat']; // shortcut
 					

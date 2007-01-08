@@ -1,103 +1,50 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html><head>
-	<script type="text/javascript" src="../src/wforms_core.js" ></script>
-	<script type="text/javascript" src="../src/wforms_repeat_limited.js" ></script>
-</head>
-<style type="text/css">
-.tableBody { border-spacing: 1px; border: #000 1px solid; background: #000000; }
-.tableRowTD { background: #FFFFFF; }
-.tableHeaderTD { background: #CCCCCC; }
-th { background: #999999; }
-</style>
-
-<script type="text/javascript">
-
-
-		wFORMS.behaviors['repeat'].onRepeat = function() { updateSelects(); };
-		wFORMS.behaviors['repeat'].onRemove = function() { updateSelects(); };
-		wFORMS.preserveRadioName = false; // default: true.	
-		wFORMS.arrMsg[0] = "Add source";
-		wFORMS.arrMsg[1] = "Will add another funding source.";
-		wFORMS.arrMsg[2] = "Remove";
-		wFORMS.arrMsg[3] = "Removes this entry.";
-
-
-		var fids = new Array(25, 29, 30);
-		var fnames = new Array('State', 'ICR Type', 'TRECC');
-		
-		
-		function updateSelects() {
-			var sel, k, frm = document.new_f, dsel = 0;
-			var used = Array(frm.fsrc[frm.fsrc.selectedIndex].value);
-			var usedBy = Array(frm.fsrc);
-			for (var i = 2; i <= document.getElementById('rep_row-RC').value; i++) { // find used fsrcs
-				sel = frm['fsrc-' + i];
-				if (sel != null && sel.selectedIndex != -1 && document.getElementById('fsrc-' + i) == sel) {
-					if (!inArray(sel[sel.selectedIndex].value, used)) {
-						used.push(sel[sel.selectedIndex].value);
-						usedBy.push(sel);
-					} else { dsel = sel; }
-				}
-			}
-			if (dsel != 0) { // brand new select - set to first unused value
-				for (var i = 0; i < fids.length; i++) {
-					if (!inArray(fids[i], used)) {
-						used.push(fids[i]);
-						usedBy.push(dsel);
-						break;
-					}
-				}
-			}
-			for (var i = 0; i < used.length; i++) { // regenerate
-				usedBy[i].options.length = k = 0;
-				for (var j = 0; j < fids.length; j++) {
-					if (!inArray(fids[j], used)) { // add unused
-						usedBy[i].options[k++] = new Option(fnames[j], fids[j]);
-					} else if (fids[j] == used[i]) { // add selected, select it
-						usedBy[i].options[k++] = new Option(fnames[j], fids[j]);
-						usedBy[i].selectedIndex = k - 1;
-					}
-				}
-			}
-		}
-		
-		function fsrcName(fid) {
-			var i = 0;
-			while (fids[i] != fid) { i++; }
-			return fnames[i];
-		}
-		
-		function inArray(needle, haystack) {
-			for (var i = 0; i <= haystack.length; i++) {
-				if (haystack[i] == needle) { return true; }
-			}
-			return false;
-		}
-
-	</script>
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>wForms 2.0 Example - Repeatable Sections</title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+ 
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>  
+   <script type="text/javascript" src="../src/wforms_repeat.js" ></script>
+   <script type="text/javascript">
+   	wFORMS.debugLevel=1;
+   </script>
 </head>
 <body>
+<p>&nbsp;</p>
+<form method="post" action="http://www.formassembly.com/wForms/dummy-form-processor.php" id="wf_TestForm">
+<fieldset id="wf_Relatives1" class="repeat">
+    <legend>Relatives</legend>
+    <span class="oneField">
+      <label for="wf_FirstName" class="preField">First Name:</label>
+      <input type="text" id="wf_FirstName" name="wf_FirstName" value="" size="" class=""/>
+      <br/>
+    </span>
 
-<form name="new_f" action="#" method="POST">	
-
-	<br>
-	<table class="tableBody" border="0" cellspacing="1" cellpadding="3">
-	<tr><th colspan="4">Existing funding sources as of Apr 2006</th></tr>
-	<tr class="tableHeaderTD"><td>Began</td><td>Name</td><td>Percent</td><td>Remove?</td></tr>
-		<tr class="tableRowTD">
-		<td>Apr  7 2006</td><td>NSF Grant</td>
-		<td><input type="text" name="f26" value="100" size="4"></td>
-		<td><input name="c26" type="checkbox" onClick="if (this.checked == true) { document.new_f.f26.disabled = true; } else { document.new_f.f26.disabled = false; }"></td>
-	</tr><tr><th colspan="4">New funding sources as of Apr 2006</th></tr>
-<tr class="tableHeaderTD"><td colspan="2">Name</td><td>Percent</td><td></td></tr>
-<tr class="repeat tableRowTD" id="rep_row"><td colspan="2"><select name="fsrc" id="fsrc" onChange="updateSelects()">
-	<option value="25">State</option>
-	<option value="29">ICR Type</option>
-	<option value="30">TRECC</option>
-</select></td><td><input type="text" name="pct" size="4"></td><td></td></tr>
-</table><br><input type="submit" value="Make changes"><input type="button" value="Cancel" onClick="document.new_f.mode.value = ''; document.new_f.submit()">
-<input type="hidden" name="n_month" value="4">
-<input type="hidden" name="n_year" value="2006">
-<input type="hidden" name="mode" value="new">
+    <span class="oneField">
+      <label for="wf_LastName" class="preField">Last Name:</label>
+      <input type="text" id="wf_LastName" name="wf_LastName" value="" size="" class=""/>
+      <br/>
+    </span>
+    <span class="oneField">
+      <div class="field-hint-inactive" id="wf_BirthDate2-H">
+        <div>(mm/dd/yyyy)</div>
+      </div>
+      <label for="wf_BirthDate2" class="preField">Birth Date:</label>
+      <input type="text" id="wf_BirthDate2" name="wf_BirthDate2" value="" size="9" class="validate-date"/>
+      <br/>
+    </span>
+  </fieldset>
+  
+  <a href="#" id="wf_Relatives1-wfDL" class="duplicateLink">Duplicate this</a>
+  
+  <div class="actions">
+    <input type="submit" class="primaryAction" id="submit-wf_RepeatableSection" value="submit"/>
+  </div>
 </form>
-</body></html>
+
+</body>
+</html>
