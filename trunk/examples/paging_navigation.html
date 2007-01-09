@@ -11,6 +11,8 @@
    <script type="text/javascript" src="../src/wforms_validation.js" ></script>
 	<script type="text/javascript">
 		/* Replace the default navigation subtitle markup */
+		wFORMS.debugLevel = 1;
+		
 		wFORMS.behaviors['paging_navigation'].createNavigationSubtitle = function(subtitle) {
 			var e = document.createElement('div');
 			var t = document.createTextNode('subtitle');

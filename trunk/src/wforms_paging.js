@@ -2,9 +2,6 @@
 // Form Paging Behavior
 // ------------------------------------------------------------------------------------------
   
-// Change Log:
-// v2.0.1 - March 22nd 2006 - Added onPageChange event and gotoPage method.
-
    if(wFORMS) {
 		// Component properties 
 		wFORMS.className_paging				= "wfPage";
@@ -25,6 +22,7 @@
 			className_pageNextButton: wFORMS.className_pagingButtons + " wfPageNextButton",
 			className_pagePreviousButton: wFORMS.className_pagingButtons + " wfPagePreviousButton",			
 			behaviorInUse : false,
+			allowNestedPages: false,
 			onPageChange : null, /* Function to run when the page is changed */
 
 			// ------------------------------------------------------------------------------------------
@@ -33,6 +31,11 @@
 			evaluate: function(node) {
 				if (wFORMS.helpers.hasClass(node,wFORMS.className_paging)) {
 					
+					if(!wFORMS.behaviors['paging'].allowNestedPages && wFORMS.behaviors['paging'].getPageElement(node)) {
+						// found a parent node that is also a page element. 
+						return;
+					}
+						
 					wFORMS.behaviors['paging'].behaviorInUse = true;
 					
 					var currentPageIndex = wFORMS.behaviors['paging'].getPageIndex(node);
@@ -40,17 +43,14 @@
 						// add previous page button	
 						var placeholder = this.getButtonPlaceholder(node);
 						var button = placeholder.insertBefore(this.createPreviousPageButton(),placeholder.firstChild);						
-						wFORMS.helpers.addEvent(button,'click',wFORMS.behaviors['paging'].pagingPrevious);									
+						wFORMS.helpers.addEvent(button,'click',wFORMS.behaviors['paging'].pagingPrevious);						
 					} else {
 						// set current page class
 						node.className += ' ' + wFORMS.className_pagingCurrent;
 						
 						// get the corresponding form element
 						var form = wFORMS.behaviors['paging'].getFormElement(node);	
-							
-						// hide submit button until the last page of the form is reached
-						wFORMS.behaviors['paging'].hideSubmitButton(form);
-												
+																									
 						// prevent submission of form with enter key.
 						wFORMS.helpers.addEvent(form,'submit', function(e) { var element = wFORMS.helpers.getSourceElement(e);
 																			 if(element.type && element.type.toLowerCase()=='text') 
@@ -63,6 +63,10 @@
 						var placeholder = this.getButtonPlaceholder(node);
 						var button = placeholder.appendChild(this.createNextPageButton());
 						wFORMS.helpers.addEvent(button,'click',wFORMS.behaviors['paging'].pagingNext);	
+						// hide submit button until the last page of the form is reached (do it once on the 1st page)
+						if(currentPageIndex==1) {							
+							wFORMS.behaviors['paging'].hideSubmitButton(form);
+						}						
 					}
 				}
 			  
@@ -231,7 +235,7 @@
 			// ------------------------------------------------------------------------------------------							
 			getFormElement: function(element) {
 				var form = element.parentNode;
-				while(form && form.tagName.toUpperCase() != "FORM")
+				while(form && form.tagName != "FORM")
 					form = form.parentNode;
 				return form;
 			},
@@ -240,9 +244,12 @@
 			// ------------------------------------------------------------------------------------------							
 			getPageElement: function(element) {
 				var n = element.parentNode;
-				while(n && (!n.className || !wFORMS.helpers.hasClass(n,wFORMS.className_paging)))
+				while(n && n.tagName != "FORM" && (!n.className || !wFORMS.helpers.hasClass(n,wFORMS.className_paging)))
 					n = n.parentNode;
-				return n;
+				if(n && wFORMS.helpers.hasClass(n,wFORMS.className_paging))
+					return n;
+				else
+					return null;
 			},
 			// ------------------------------------------------------------------------------------------
 			// getPageIndex
