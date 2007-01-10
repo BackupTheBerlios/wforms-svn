@@ -352,6 +352,7 @@ wFORMS.arrMsg[5]="Previous Page";
 wFORMS.behaviors["paging"]={idSuffix_buttonsPlaceholder:"-buttons",className_pageNextButton:wFORMS.className_pagingButtons+" wfPageNextButton",className_pagePreviousButton:wFORMS.className_pagingButtons+" wfPagePreviousButton",behaviorInUse:false,allowNestedPages:false,onPageChange:null,evaluate:function(_34){
 if(wFORMS.helpers.hasClass(_34,wFORMS.className_paging)){
 if(!wFORMS.behaviors["paging"].allowNestedPages&&wFORMS.behaviors["paging"].getPageElement(_34)){
+_34.className=_34.className.replace(wFORMS.className_paging,"");
 return;
 }
 wFORMS.behaviors["paging"].behaviorInUse=true;

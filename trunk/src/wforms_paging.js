@@ -33,6 +33,8 @@
 					
 					if(!wFORMS.behaviors['paging'].allowNestedPages && wFORMS.behaviors['paging'].getPageElement(node)) {
 						// found a parent node that is also a page element. 
+						// remove paging class so that the content is not hidden.
+						node.className = node.className.replace(wFORMS.className_paging,"");
 						return;
 					}
 						
