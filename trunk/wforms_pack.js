@@ -1063,7 +1063,7 @@ wFORMS.className_validationError_msg="errMsg";
 wFORMS.className_validationError_fld="errFld";
 wFORMS.classNamePrefix_validation="validate";
 wFORMS.idSuffix_fieldError="-E";
-wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",className_allRequired:"allrequired",jumpToErrorOnPage:null,currentPageIndex:-1,submitSwitchedOffFields:false,evaluate:function(_ab){
+wFORMS.behaviors["validation"]={errMsg_required:"This field is required. ",errMsg_alpha:"The text must use alphabetic characters only (a-z, A-Z). Numbers are not allowed.",errMsg_email:"This does not appear to be a valid email address.",errMsg_integer:"Please enter an integer.",errMsg_float:"Please enter a number (ex. 1.9).",errMsg_password:"Unsafe password. Your password should be between 4 and 12 characters long and use a combinaison of upper-case and lower-case letters.",errMsg_alphanum:"Please use alpha-numeric characters only [a-z 0-9].",errMsg_date:"This does not appear to be a valid date.",errMsg_notification:"%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided.",errMsg_custom:"Please enter a valid value.",className_allRequired:"allrequired",jumpToErrorOnPage:null,currentPageIndex:-1,submitSwitchedOffFields:false,switchedOffFields:[],evaluate:function(_ab){
 if(_ab.tagName.toUpperCase()=="FORM"){
 if(wFORMS.functionName_formValidation.toString()==wFORMS.functionName_formValidation){
 wFORMS.functionName_formValidation=eval(wFORMS.functionName_formValidation);
@@ -1097,87 +1097,93 @@ wFORMS.behaviors["validation"].showAlert(_af);
 }
 return wFORMS.helpers.preventEvent(e);
 }
+if(!wFORMS.behaviors["validation"].submitSwitchedOffFields){
+for(var i=0;i<wFORMS.behaviors["validation"].switchedOffFields.length;i++){
+var _ad=wFORMS.behaviors["validation"].switchedOffFields[i];
+while(_ad.childNodes[0]){
+_ad.removeChild(_ad.childNodes[0]);
+}
+}
+}
 return true;
 },remove:function(){
-},validateElement:function(_b0){
-var _b1=arguments.length>2?arguments[2]:true;
-var _b2=arguments[1]?arguments[1]:false;
-var _b3=wFORMS.behaviors["validation"];
-if(wFORMS.hasBehavior("switch")&&wFORMS.helpers.hasClassPrefix(_b0,wFORMS.classNamePrefix_offState)){
-if(!_b3.submitSwitchedOffFields){
-while(_b0.childNodes[0]){
-_b0.removeChild(_b0.childNodes[0]);
-}
+},validateElement:function(_b1){
+var _b2=arguments.length>2?arguments[2]:true;
+var _b3=arguments[1]?arguments[1]:false;
+var _b4=wFORMS.behaviors["validation"];
+if(wFORMS.hasBehavior("switch")&&wFORMS.helpers.hasClassPrefix(_b1,wFORMS.classNamePrefix_offState)){
+if(!_b4.submitSwitchedOffFields){
+_b4.switchedOffFields.push(_b1);
 }
 return 0;
 }
-if(wFORMS.hasBehavior("paging")&&wFORMS.helpers.hasClass(_b0,wFORMS.className_paging)){
-if(!wFORMS.helpers.hasClass(_b0,wFORMS.className_pagingCurrent)&&_b2){
+if(wFORMS.hasBehavior("paging")&&wFORMS.helpers.hasClass(_b1,wFORMS.className_paging)){
+if(!wFORMS.helpers.hasClass(_b1,wFORMS.className_pagingCurrent)&&_b3){
 return 0;
 }
-_b3.currentPageIndex=wFORMS.behaviors["paging"].getPageIndex(_b0);
+_b4.currentPageIndex=wFORMS.behaviors["paging"].getPageIndex(_b1);
 }
-var _b4=0;
-if(!_b3.checkRequired(_b0)){
-_b3.showError(_b0,_b3.errMsg_required);
-_b4++;
+var _b5=0;
+if(!_b4.checkRequired(_b1)){
+_b4.showError(_b1,_b4.errMsg_required);
+_b5++;
 }else{
-if(wFORMS.helpers.hasClassPrefix(_b0,wFORMS.classNamePrefix_validation)){
-var _b5=_b0.className.split(" ");
-for(j=0;j<_b5.length;j++){
-switch(_b5[j]){
+if(wFORMS.helpers.hasClassPrefix(_b1,wFORMS.classNamePrefix_validation)){
+var _b6=_b1.className.split(" ");
+for(j=0;j<_b6.length;j++){
+switch(_b6[j]){
 case "validate-alpha":
-if(!_b3.isAlpha(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_alpha);
-_b4++;
+if(!_b4.isAlpha(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_alpha);
+_b5++;
 }
 break;
 case "validate-alphanum":
-if(!_b3.isAlphaNum(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_alphanum);
-_b4++;
+if(!_b4.isAlphaNum(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_alphanum);
+_b5++;
 }
 break;
 case "validate-date":
-if(!_b3.isDate(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_date);
-_b4++;
+if(!_b4.isDate(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_date);
+_b5++;
 }
 break;
 case "validate-time":
 break;
 case "validate-email":
-if(!_b3.isEmail(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_email);
-_b4++;
+if(!_b4.isEmail(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_email);
+_b5++;
 }
 break;
 case "validate-integer":
-if(!_b3.isInteger(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_integer);
-_b4++;
+if(!_b4.isInteger(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_integer);
+_b5++;
 }
 break;
 case "validate-float":
-if(!_b3.isFloat(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_float);
-_b4++;
+if(!_b4.isFloat(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_float);
+_b5++;
 }
 break;
 case "validate-strongpassword":
-if(!_b3.isPassword(_b0.value)){
-_b3.showError(_b0,_b3.errMsg_password);
-_b4++;
+if(!_b4.isPassword(_b1.value)){
+_b4.showError(_b1,_b4.errMsg_password);
+_b5++;
 }
 break;
 case "validate-custom":
-var _b6=new RegExp("/([^/]*)/([gi]*)");
-var _b7=_b0.className.match(_b6);
-if(_b7[0]){
-var _b8=new RegExp(_b7[1],_b7[2]);
-if(!_b0.value.match(_b8)){
-_b3.showError(_b0,_b3.errMsg_custom);
-_b4++;
+var _b7=new RegExp("/([^/]*)/([gi]*)");
+var _b8=_b1.className.match(_b7);
+if(_b8[0]){
+var _b9=new RegExp(_b8[1],_b8[2]);
+if(!_b1.value.match(_b9)){
+_b4.showError(_b1,_b4.errMsg_custom);
+_b5++;
 }
 }
 break;
@@ -1185,189 +1191,189 @@ break;
 }
 }
 }
-if(_b4==0){
-_b3.removeErrorMessage(_b0);
+if(_b5==0){
+_b4.removeErrorMessage(_b1);
 }else{
-if(_b3.currentPageIndex>0&&!_b3.jumpToErrorOnPage){
-_b3.jumpToErrorOnPage=_b3.currentPageIndex;
+if(_b4.currentPageIndex>0&&!_b4.jumpToErrorOnPage){
+_b4.jumpToErrorOnPage=_b4.currentPageIndex;
 }
 }
-if(_b1){
-for(var i=0;i<_b0.childNodes.length;i++){
-if(_b0.childNodes[i].nodeType==1){
-_b4+=_b3.validateElement(_b0.childNodes[i],_b2,_b1);
+if(_b2){
+for(var i=0;i<_b1.childNodes.length;i++){
+if(_b1.childNodes[i].nodeType==1){
+_b5+=_b4.validateElement(_b1.childNodes[i],_b3,_b2);
 }
 }
 }
-return _b4;
-},checkRequired:function(_ba){
-var _bb=wFORMS.behaviors["validation"];
-if(wFORMS.helpers.hasClass(_ba,wFORMS.className_required)){
-switch(_ba.tagName.toUpperCase()){
+return _b5;
+},checkRequired:function(_bb){
+var _bc=wFORMS.behaviors["validation"];
+if(wFORMS.helpers.hasClass(_bb,wFORMS.className_required)){
+switch(_bb.tagName.toUpperCase()){
 case "INPUT":
-var _bc=_ba.getAttribute("type");
-if(!_bc){
-_bc="text";
+var _bd=_bb.getAttribute("type");
+if(!_bd){
+_bd="text";
 }
-switch(_bc.toLowerCase()){
+switch(_bd.toLowerCase()){
 case "checkbox":
-return _ba.checked;
+return _bb.checked;
 break;
 case "radio":
-return _ba.checked;
+return _bb.checked;
 break;
 default:
-return !_bb.isEmpty(_ba.value);
+return !_bc.isEmpty(_bb.value);
 }
 break;
 case "SELECT":
-if(_ba.selectedIndex==-1){
+if(_bb.selectedIndex==-1){
 return false;
 }else{
-return !_bb.isEmpty(_ba.options[_ba.selectedIndex].value);
+return !_bc.isEmpty(_bb.options[_bb.selectedIndex].value);
 }
 break;
 case "TEXTAREA":
-return !_bb.isEmpty(_ba.value);
+return !_bc.isEmpty(_bb.value);
 break;
 default:
-return _bb.checkOneRequired(_ba);
+return _bc.checkOneRequired(_bb);
 break;
 }
 }else{
-if(wFORMS.helpers.hasClass(_ba,_bb.className_allRequired)){
-return _bb.checkAllRequired(_ba);
+if(wFORMS.helpers.hasClass(_bb,_bc.className_allRequired)){
+return _bc.checkAllRequired(_bb);
 }
 }
 return true;
-},checkOneRequired:function(_bd){
-if(_bd.nodeType!=1){
+},checkOneRequired:function(_be){
+if(_be.nodeType!=1){
 return false;
 }
-var _be=_bd.tagName.toUpperCase();
-var _bf=wFORMS.behaviors["validation"];
-if(_be=="INPUT"||_be=="SELECT"||_be=="TEXTAREA"){
-var _c0=_bf.getFieldValue(_bd);
-if(!_bf.isEmpty(_c0)){
+var _bf=_be.tagName.toUpperCase();
+var _c0=wFORMS.behaviors["validation"];
+if(_bf=="INPUT"||_bf=="SELECT"||_bf=="TEXTAREA"){
+var _c1=_c0.getFieldValue(_be);
+if(!_c0.isEmpty(_c1)){
 return true;
 }
 }
-for(var i=0;i<_bd.childNodes.length;i++){
-if(_bf.checkOneRequired(_bd.childNodes[i])){
+for(var i=0;i<_be.childNodes.length;i++){
+if(_c0.checkOneRequired(_be.childNodes[i])){
 return true;
 }
 }
 return false;
-},checkAllRequired:function(_c2){
-if(_c2.nodeType!=1){
+},checkAllRequired:function(_c3){
+if(_c3.nodeType!=1){
 return true;
 }
-var _c3=_c2.tagName.toUpperCase();
-var _c4=wFORMS.behaviors["validation"];
-if(_c3=="INPUT"||_c3=="SELECT"||_c3=="TEXTAREA"){
-var _c5=_c4.getFieldValue(_c2);
-if(_c4.isEmpty(_c5)){
-return false;
-}
-}
-for(var i=0;i<_c2.childNodes.length;i++){
-if(!_c4.checkAllRequired(_c2.childNodes[i])){
+var _c4=_c3.tagName.toUpperCase();
+var _c5=wFORMS.behaviors["validation"];
+if(_c4=="INPUT"||_c4=="SELECT"||_c4=="TEXTAREA"){
+var _c6=_c5.getFieldValue(_c3);
+if(_c5.isEmpty(_c6)){
 return false;
 }
 }
-return true;
-},getFieldValue:function(_c7){
-var _c8=null;
-if(_c7&&_c7.tagName){
-if(_c7.tagName.toUpperCase()=="INPUT"){
-var _c9=_c7.getAttribute("type");
-if(!_c9){
-_c9="text";
+for(var i=0;i<_c3.childNodes.length;i++){
+if(!_c5.checkAllRequired(_c3.childNodes[i])){
+return false;
 }
-switch(_c9.toLowerCase()){
+}
+return true;
+},getFieldValue:function(_c8){
+var _c9=null;
+if(_c8&&_c8.tagName){
+if(_c8.tagName.toUpperCase()=="INPUT"){
+var _ca=_c8.getAttribute("type");
+if(!_ca){
+_ca="text";
+}
+switch(_ca.toLowerCase()){
 case "checkbox":
-_c8=_c7.checked?_c7.value:null;
+_c9=_c8.checked?_c8.value:null;
 break;
 case "radio":
-var _ca=_c7.form[_c7.name];
-for(var i=0;i<_ca.length;i++){
-if(_ca[i].checked){
-if(!_c8){
-_c8=new Array();
+var _cb=_c8.form[_c8.name];
+for(var i=0;i<_cb.length;i++){
+if(_cb[i].checked){
+if(!_c9){
+_c9=new Array();
 }
-_c8[_c8.length]=_ca[i].value;
+_c9[_c9.length]=_cb[i].value;
 }
 }
 break;
 default:
-_c8=_c7.value;
+_c9=_c8.value;
 }
 }else{
-if(_c7.tagName.toUpperCase()=="SELECT"){
-if(_c7.selectedIndex!=-1){
-_c8=_c7.options[_c7.selectedIndex].value;
+if(_c8.tagName.toUpperCase()=="SELECT"){
+if(_c8.selectedIndex!=-1){
+_c9=_c8.options[_c8.selectedIndex].value;
 }else{
-_c8=null;
+_c9=null;
 }
 }else{
-if(_c7.tagName.toUpperCase()=="TEXTAREA"){
-_c8=_c7.value;
+if(_c8.tagName.toUpperCase()=="TEXTAREA"){
+_c9=_c8.value;
 }
 }
 }
 }
-return _c8;
+return _c9;
 },isEmpty:function(s){
-var _cd=/^\s+$/;
-return ((s==null)||(s.length==0)||_cd.test(s));
+var _ce=/^\s+$/;
+return ((s==null)||(s.length==0)||_ce.test(s));
 },isAlpha:function(s){
-var _cf=/^[a-zA-Z\s]+$/;
-return wFORMS.behaviors["validation"].isEmpty(s)||_cf.test(s);
+var _d0=/^[a-zA-Z\s]+$/;
+return wFORMS.behaviors["validation"].isEmpty(s)||_d0.test(s);
 },isAlphaNum:function(s){
-var _d1=/^[\w\s]+$/;
-return wFORMS.behaviors["validation"].isEmpty(s)||_d1.test(s);
+var _d2=/^[\w\s]+$/;
+return wFORMS.behaviors["validation"].isEmpty(s)||_d2.test(s);
 },isDate:function(s){
-var _d3=new Date(s);
-return wFORMS.behaviors["validation"].isEmpty(s)||!isNaN(_d3);
+var _d4=new Date(s);
+return wFORMS.behaviors["validation"].isEmpty(s)||!isNaN(_d4);
 },isEmail:function(s){
-var _d5=/\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/;
-return wFORMS.behaviors["validation"].isEmpty(s)||_d5.test(s);
+var _d6=/\w{1,}[@][\w\-]{1,}([.]([\w\-]{1,})){1,3}$/;
+return wFORMS.behaviors["validation"].isEmpty(s)||_d6.test(s);
 },isInteger:function(s){
-var _d7=/^[+]?\d+$/;
-return wFORMS.behaviors["validation"].isEmpty(s)||_d7.test(s);
+var _d8=/^[+]?\d+$/;
+return wFORMS.behaviors["validation"].isEmpty(s)||_d8.test(s);
 },isFloat:function(s){
 return wFORMS.behaviors["validation"].isEmpty(s)||!isNaN(parseFloat(s));
 },isPassword:function(s){
 return wFORMS.behaviors["validation"].isEmpty(s);
-},showError:function(_da,_db){
-wFORMS.behaviors["validation"].removeErrorMessage(_da);
-if(!_da.id){
-_da.id=wFORMS.helpers.randomId();
+},showError:function(_db,_dc){
+wFORMS.behaviors["validation"].removeErrorMessage(_db);
+if(!_db.id){
+_db.id=wFORMS.helpers.randomId();
 }
-_da.className+=" "+wFORMS.className_validationError_fld;
-var _dc=document.createTextNode(" "+_db);
-var fe=document.getElementById(_da.id+wFORMS.idSuffix_fieldError);
+_db.className+=" "+wFORMS.className_validationError_fld;
+var _dd=document.createTextNode(" "+_dc);
+var fe=document.getElementById(_db.id+wFORMS.idSuffix_fieldError);
 if(!fe){
 fe=document.createElement("div");
-fe.setAttribute("id",_da.id+wFORMS.idSuffix_fieldError);
-var fl=document.getElementById(_da.id+wFORMS.idSuffix_fieldLabel);
+fe.setAttribute("id",_db.id+wFORMS.idSuffix_fieldError);
+var fl=document.getElementById(_db.id+wFORMS.idSuffix_fieldLabel);
 if(fl){
 fl.parentNode.insertBefore(fe,fl.nextSibling);
 }else{
-_da.parentNode.insertBefore(fe,_da.nextSibling);
+_db.parentNode.insertBefore(fe,_db.nextSibling);
 }
 }
-fe.appendChild(_dc);
+fe.appendChild(_dd);
 fe.className+=" "+wFORMS.className_validationError_msg;
-},showAlert:function(_df){
-alert(wFORMS.behaviors["validation"].errMsg_notification.replace("%%",_df));
-},removeErrorMessage:function(_e0){
-if(wFORMS.helpers.hasClass(_e0,wFORMS.className_validationError_fld)){
-var _e1=new RegExp(wFORMS.className_validationError_fld,"gi");
-_e0.className=_e0.className.replace(_e1,"");
-var _e2=document.getElementById(_e0.id+wFORMS.idSuffix_fieldError);
-if(_e2){
-_e2.innerHTML="";
+},showAlert:function(_e0){
+alert(wFORMS.behaviors["validation"].errMsg_notification.replace("%%",_e0));
+},removeErrorMessage:function(_e1){
+if(wFORMS.helpers.hasClass(_e1,wFORMS.className_validationError_fld)){
+var _e2=new RegExp(wFORMS.className_validationError_fld,"gi");
+_e1.className=_e1.className.replace(_e2,"");
+var _e3=document.getElementById(_e1.id+wFORMS.idSuffix_fieldError);
+if(_e3){
+_e3.innerHTML="";
 }
 }
 }};

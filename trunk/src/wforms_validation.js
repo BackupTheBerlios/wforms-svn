@@ -37,6 +37,7 @@
 			
 			// do not submit fields turned off by switch behavior
 			submitSwitchedOffFields : false,
+			switchedOffFields : [],
 			
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
@@ -96,6 +97,15 @@
 					if(wFORMS.showAlertOnError){ wFORMS.behaviors['validation'].showAlert(nbErrors); }
 					return wFORMS.helpers.preventEvent(e); 
 				}
+				
+				// remove switched-off content if any
+				if(!wFORMS.behaviors['validation'].submitSwitchedOffFields) {
+					for(var i=0; i < wFORMS.behaviors['validation'].switchedOffFields.length; i++) {
+						var element = wFORMS.behaviors['validation'].switchedOffFields[i];
+						while(element.childNodes[0]) 
+							element.removeChild(element.childNodes[0]);
+					}
+				}				
 				return true;
 			},
 		   
@@ -122,8 +132,7 @@
 				// Note: what happens if an element is the target of 2+ switches, some ON and some OFF ?
 				if(wFORMS.hasBehavior('switch') && wFORMS.helpers.hasClassPrefix(element,wFORMS.classNamePrefix_offState)) {
 					if(!wBehavior.submitSwitchedOffFields) {
-						while(element.childNodes[0]) 
-							element.removeChild(element.childNodes[0]);
+						wBehavior.switchedOffFields.push(element);
 					}
 					return 0;
 				}
