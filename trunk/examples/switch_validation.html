@@ -10,9 +10,10 @@
    <script type="text/javascript" src="../src/wforms_core.js" ></script>  
    <script type="text/javascript" src="../src/wforms_validation.js" ></script>
    <script type="text/javascript" src="../src/wforms_switch.js" ></script> 
+   <script type="text/javascript" src="../src/wforms_paging.js" ></script> 
    <script type="text/javascript">
    	wFORMS.debugLevel=1;
-	wFORMS.behaviors.validation.submitSwitchedOffFields = true; // default=false
+	wFORMS.behaviors.validation.submitSwitchedOffFields = false; // default=false
    </script>
 </head>
 <body>
@@ -21,34 +22,37 @@
   <p>References: <a href="http://www.formassembly.com/wForms">wForms Library</a>, <a href="http://www.formassembly.com/wForms/v2.0/documentation/input-validation.php">Input Validation Documentation</a></p>
 
 
-  <fieldset id="fieldset">
-    <legend>Example 1</legend>
+  <fieldset id="wfPgIndex-1" class="wfPage" >
+	<legend>Example 1</legend>
+	
+	<span class="oneChoice">
+	  <input type="radio" value="a" class="switch-a" id="radio1" name="radio1" checked="checked" />
+	  <label for="radio1" class="postField">Show Section A</label>
+	</span>
+	<span class="oneChoice">
+	  <input type="radio" value="b" class="switch-b" id="radio2" name="radio1"/>
+	  <label for="radio2" class="postField">Show Section B</label>
+	</span>
+	<br/>
 
-    <span class="oneChoice">
-      <input type="radio" value="a" class="switch-a" id="radio1" name="radio1" checked="checked" />
-      <label for="radio1" class="postField">Show Section A</label>
-    </span>
-    <span class="oneChoice">
-      <input type="radio" value="b" class="switch-b" id="radio2" name="radio1"/>
-      <label for="radio2" class="postField">Show Section B</label>
-    </span>
-    <br/>
-
-
-  <fieldset id="fieldset1" class="offstate-a">
-  	<legend>Section A</legend>
-    <label for="text1" class="preField">Required Text Input:</label>
-    <input type="text" id="text1" name="text1" value="default" size="" class="required"/>
-  </fieldset>
-
-  <fieldset id="fieldset2" class="offstate-b">
-  	<legend>Section B</legend>  
-    <label for="text2" class="preField">Non-Required Text Area :</label>
-    <textarea id="text2" name="text2" cols="24" rows="4">Default value</textarea>
-  </fieldset>
+	  <fieldset id="fieldset1" class="offstate-a">
+	  	<legend>Section A</legend>
+	    <label for="text1" class="preField">Required Text Input:</label>
+	    <input type="text" id="text1" name="text1" value="default" size="" class="required"/>
+	  </fieldset>
+	
+	  <fieldset id="fieldset2" class="offstate-b">
+	  	<legend>Section B</legend>  
+	    <label for="text2" class="preField">Non-Required Text Area :</label>
+	    <textarea id="text2" name="text2" cols="24" rows="4">Default value</textarea>
+	  </fieldset>
+	  
+	  <label>Required Field: <input type="text" class="required" name="text3" /></label>
   </fieldset>
   
-
+  <fieldset id="wfPgIndex-2" class="wfPage" >
+	<label>Required Field:	<input type="text" class="required" name="text4" /></label>
+  </fieldset>
   
   <input type="submit" class="primaryAction" value="submit"/>
 </form>

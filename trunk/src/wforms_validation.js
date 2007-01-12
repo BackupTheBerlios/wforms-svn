@@ -68,9 +68,10 @@
 				if(!element) element = e;
 				//wFORMS.debug('validation/run: ' + element.id , 5);	
 				
-				var currentPageOnly = arguments[1] ? arguments[1] : (wFORMS.hasBehavior('paging') && wFORMS.behaviors['paging'].behaviorInUse);
+				var currentPageOnly = arguments.length>1 ? arguments[1]:false;
+				// arguments[1] : (wFORMS.hasBehavior('paging') && wFORMS.behaviors['paging'].behaviorInUse);
 
-				
+				wFORMS.behaviors['validation'].switchedOffFields = [];
 				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
 
 				// on multi-page forms we need to prevent the submission when the 'enter' key is pressed
@@ -97,9 +98,11 @@
 					if(wFORMS.showAlertOnError){ wFORMS.behaviors['validation'].showAlert(nbErrors); }
 					return wFORMS.helpers.preventEvent(e); 
 				}
-				
-				// remove switched-off content if any
-				if(!wFORMS.behaviors['validation'].submitSwitchedOffFields) {
+
+				// Remove switched-off content if any
+				// Note: in multi-page behavior the validation is run on "page next" without submitting the form.
+				//       In this situation (currentPageOnly==true) switched-off conditionals should not be removed. 
+				if(!wFORMS.behaviors['validation'].submitSwitchedOffFields && !currentPageOnly) {
 					for(var i=0; i < wFORMS.behaviors['validation'].switchedOffFields.length; i++) {
 						var element = wFORMS.behaviors['validation'].switchedOffFields[i];
 						while(element.childNodes[0]) 

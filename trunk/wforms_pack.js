@@ -1076,7 +1076,8 @@ var _ad=wFORMS.helpers.getSourceElement(e);
 if(!_ad){
 _ad=e;
 }
-var _ae=arguments[1]?arguments[1]:(wFORMS.hasBehavior("paging")&&wFORMS.behaviors["paging"].behaviorInUse);
+var _ae=arguments.length>1?arguments[1]:false;
+wFORMS.behaviors["validation"].switchedOffFields=[];
 wFORMS.behaviors["validation"].jumpToErrorOnPage=null;
 if(wFORMS.preventSubmissionOnEnter){
 if(_ad.type&&_ad.type.toLowerCase()=="text"){
@@ -1097,7 +1098,7 @@ wFORMS.behaviors["validation"].showAlert(_af);
 }
 return wFORMS.helpers.preventEvent(e);
 }
-if(!wFORMS.behaviors["validation"].submitSwitchedOffFields){
+if(!wFORMS.behaviors["validation"].submitSwitchedOffFields&&!_ae){
 for(var i=0;i<wFORMS.behaviors["validation"].switchedOffFields.length;i++){
 var _ad=wFORMS.behaviors["validation"].switchedOffFields[i];
 while(_ad.childNodes[0]){
