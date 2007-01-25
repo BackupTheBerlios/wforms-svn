@@ -1,0 +1,37 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+   <title>wForms 2.0 Example - Field Hint </title>
+	<meta name="Description" content="wForms is an open-source, unobtrusive javascript library that adds commonly needed behaviors to traditional web forms without the need for any programming skills." />
+	<meta http-equiv="Keywords" content="form, web form, html form, online form, wForms, input validation, field validation, javascript library" />
+ 
+   <link type="text/css" href="../css/wforms.css" rel="stylesheet" />
+   <link type="text/css" href="../css/wforms-jsonly.css" rel="alternate stylesheet" title="stylesheet activated by javascript" />
+   <script type="text/javascript" src="../src/wforms_core.js" ></script>  
+   <script type="text/javascript" src="../src/wforms_hint.js" ></script>
+  
+   <script type="text/javascript">
+   	wFORMS.debugLevel=1;
+   </script>
+</head>
+<body>
+<form method="post" action="" id="wf_ApplicationForm-I">
+  <h2>Field Hint Examples</h2>
+  <p>References: <a href="http://www.formassembly.com/wForms">wForms Library</a></p>
+  <fieldset id="fieldset1">
+    <legend>Text Inputs</legend>
+
+    <label for="text1" class="preField">Field:</label>
+    <input type="text" id="text1" name="text1" value="" size="" />
+	<div id="text1-H" class="field-hint-inactive"><div>Hint 1</div></div>
+    <br/>
+    <label for="text2" class="preField">Email <em>(not required)</em>:</label>
+    <input type="file" id="text2" name="text2" value="" size="" />
+	<div id="text2-H" class="field-hint-inactive"><div>Hint 2</div></div>	
+    <br/>
+  </fieldset>
+
+  <input type="submit" class="primaryAction" value="submit"/>
+</form>
+</body>
+</html>
