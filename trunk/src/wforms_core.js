@@ -151,6 +151,10 @@ wHELPERS.prototype.getLeft = function(obj) {
 				// relatively postioned element
 				return cur;
 			}
+			if((new wHELPERS()).getComputedStyle(obj,'position') == 'absolute' ) {
+				// relatively postioned element
+				return cur;
+			}
 			cur+=obj.offsetLeft;
 			obj = obj.offsetParent;
 		}
@@ -222,31 +226,27 @@ if (!Array.prototype.push) {
 	  },
 		  
 	  _addBehaviors : function (node, deep) {
-		  if(node.getAttribute('rel')=='no-behavior') {
-		  	return false;
-		  }
+		 if(node.getAttribute('rel')=='no-behavior') {
+			  return false;
+		 }
 		 // Process element nodes only
 		 if(node.nodeType == 1) { 
-			  if(node.tagName.toUpperCase() == 'FORM') {
+			  if(node.tagName == 'FORM') {
 				  wFORMS.processedForm = node;
-			  } 
-		 
+			  } 		 
 			  for(var behaviorName in wFORMS.behaviors) {
 				  wFORMS.behaviors[behaviorName].evaluate(node);
-			  }
-			 
+			  }			
 			  if(deep) {
-				  for (var i=0, l=node.childNodes.length, cn=node.childNodes; i<l; i++) {
+				  for (var i=0, cn=node.childNodes, l=cn.length; i<l; i++) {
 				  	 if(cn[i].nodeType==1)
 					 	wFORMS._addBehaviors(cn[i], deep);
 				  }
-			  }
-			  
-			  if(node.tagName.toUpperCase() == 'FORM') {
-				  // wFORMS.debug('wForms/processed: ' + node.id);
+			  }			  
+			  if(node.tagName == 'FORM') {
 				  // run the init stack
 				  for (var i=0;i<wFORMS.onLoadComplete.length;i++) {
-					  wFORMS.onLoadComplete[i]();
+					  wFORMS.onLoadComplete[i].func(wFORMS.onLoadComplete[i].form);
 				  }
 				  // empty the stack					  
 				  if(wFORMS.onLoadComplete.length > 0) {

@@ -12,17 +12,17 @@
 		wFORMS.classNamePrefix_onState		= "onstate";
 		wFORMS.switchScopeRootTag           = "";         	  // deprecated.	
 		
-		wFORMS.switchTriggers               = {};			  // associative multi-dimensional array (switchname->element Ids)
-		wFORMS.switchTargets                = {};			  // associative multi-dimensional array (switchname->element Ids)
+		wFORMS.switchTriggers               = [];			  // associative multi-dimensional array (switchname->element Ids)
+		wFORMS.switchTargets                = [];			  // associative multi-dimensional array (switchname->element Ids)
 		
 	
 		wFORMS.behaviors['switch'] = {
-		   
+
 		   // ------------------------------------------------------------------------------------------
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
 		   evaluate: function(node) {
-               
+                
 			    // Handle Switch Triggers
 				// add event handles and populate the wFORMS.switchTriggers 
 				// associative array (switchname->element Ids)
@@ -31,16 +31,21 @@
 
 					if(!node.id) node.id = wFORMS.helpers.randomId();
 					
-					//wFORMS.debug('switch/evaluate: '+ node.className + ' ' + node.tagName);
+					if(!wFORMS.processedForm || !wFORMS.processedForm.id)
+						var formId = "undefined";
+					else
+						var formId = wFORMS.processedForm.id;
 					
 					// Go through each class (one element can have more than one switch trigger).
 					var switchNames = wFORMS.behaviors['switch'].getSwitchNames(node);
 					for(var i=0; i < switchNames.length; i++) {
-						if(!wFORMS.switchTriggers[switchNames[i]]) 
-							wFORMS.switchTriggers[switchNames[i]] = new Array();
-						if(!wFORMS.switchTriggers[switchNames[i]][node.id])
-							wFORMS.switchTriggers[switchNames[i]].push(node.id);
-						//wFORMS.debug('switch/evaluate: [trigger] '+ switchNames[i] + ' ' + node.id,3);
+						if(!wFORMS.switchTriggers[formId])
+							wFORMS.switchTriggers[formId] = new Array();
+						if(!wFORMS.switchTriggers[formId][switchNames[i]]) 
+							wFORMS.switchTriggers[formId][switchNames[i]] = new Array();
+						if(!wFORMS.switchTriggers[formId][switchNames[i]][node.id]) {
+							wFORMS.switchTriggers[formId][switchNames[i]].push(node.id);
+						}
 					}
 
 					switch(node.tagName.toUpperCase()) {
@@ -96,37 +101,48 @@
 				    wFORMS.helpers.hasClassPrefix(node, wFORMS.classNamePrefix_onState)) {
 					
 					if(!node.id) node.id = wFORMS.helpers.randomId();
+
+					if(!wFORMS.processedForm || !wFORMS.processedForm.id)
+						var formId = "undefined";
+					else
+						var formId = wFORMS.processedForm.id;
 					
 					// Go through each class (one element can be the target of more than one switch).
 					var switchNames = wFORMS.behaviors['switch'].getSwitchNames(node);
 					
 					for(var i=0; i < switchNames.length; i++) {
-						if(!wFORMS.switchTargets[switchNames[i]]) 
-							wFORMS.switchTargets[switchNames[i]] = new Array();
-						if(!wFORMS.switchTargets[switchNames[i]][node.id]) 
-							wFORMS.switchTargets[switchNames[i]].push(node.id);
+						if(!wFORMS.switchTargets[formId])
+							wFORMS.switchTargets[formId] = new Array();
+						if(!wFORMS.switchTargets[formId][switchNames[i]]) 
+							wFORMS.switchTargets[formId][switchNames[i]] = new Array();
+						if(!wFORMS.switchTargets[formId][switchNames[i]][node.id]) 
+							wFORMS.switchTargets[formId][switchNames[i]].push(node.id);
 						//wFORMS.debug('switch/evaluate: [target] '+ switchNames[i],3);
 					}										
 				}
 				
 				if(node.tagName && node.tagName.toUpperCase()=='FORM') {
-					// function to be called when all behaviors for this form have been applied
-					//wFORMS.debug('switch/push init');
-					wFORMS.onLoadComplete.push(wFORMS.behaviors['switch'].init); 
+					// function to be called when all behaviors have been applied
+					wFORMS.onLoadComplete.push({form:node, func: wFORMS.behaviors['switch'].init}); 
+					// clear existing triggers/targets for that form.
+					wFORMS.behaviors['switch'].clear(node.id);
 				}
            },
 		   
 		   // ------------------------------------------------------------------------------------------
            // init: executed once evaluate has been applied to all elements
 		   // ------------------------------------------------------------------------------------------	   
-		   init: function() {
-			   // go through all switch triggers and activate those who are already ON
-			   //wFORMS.debug('switch/init: '+ (wFORMS.switchTriggers.length));
-			   for(var switchName in wFORMS.switchTriggers) {
+		   init: function(form) {
+		  
+		   	   if(!form || !form.id)
+		   	   		var formId = "undefined";
+			   else
+			   		var formId = form.id; 
+			   // go through all switch triggers and activate those who are already ON			 			   
+			   for(var switchName in wFORMS.switchTriggers[formId]) {
 					// go through all triggers for the current switch
-					for(var i=0; i< wFORMS.switchTriggers[switchName].length; i++) {		   
-					   	var element = document.getElementById(wFORMS.switchTriggers[switchName][i]);
-						//wFORMS.debug('switch/init: ' + element + ' ' + switchName , 5);	
+					for(var i=0; i< wFORMS.switchTriggers[formId][switchName].length; i++) {						
+					   	var element = document.getElementById(wFORMS.switchTriggers[formId][switchName][i]);					   							
 					   	if(wFORMS.behaviors['switch'].isTriggerOn(element,switchName)) {
 							// if it's a select option, get the select element
 							if(element.tagName.toUpperCase()=='OPTION') {
@@ -149,7 +165,20 @@
                 var element   = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e;
 			    //wFORMS.debug('switch/run: ' + element.id , 5);	
-
+				
+				if(element.form)
+					var form = element.form;
+				else {
+					var form = element.parentNode;
+					while(form && form.tagName != "FORM")
+						form = form.parentNode;
+				}	
+				if(!form || !form.id) {
+					// switch not within a form tag
+					var formId = "undefined";
+				} else
+					var formId = form.id;
+				
 				var switches_ON  = new Array();
 				var switches_OFF = new Array();
 				
@@ -193,11 +222,11 @@
 				// Turn off switches first
 				for(var i=0; i < switches_OFF.length; i++) {
 					// Go through all targets of the switch 
-					var elements = wFORMS.behaviors['switch'].getElementsBySwitchName(switches_OFF[i]);
+					var elements = wFORMS.behaviors['switch'].getElementsBySwitchName(switches_OFF[i], formId);
 					for(var j=0;j<elements.length;j++) {
 																									
 						// only turn off a target if all its triggers are off
-						var triggers = wFORMS.switchTriggers[switches_OFF[i]];												
+						var triggers = wFORMS.switchTriggers[formId][switches_OFF[i]];												
 						var doSwitch = true;
 							
 						for (var k=0; k < triggers.length; k++) {
@@ -218,7 +247,7 @@
 				}
 				// Turn on
 				for(var i=0; i < switches_ON.length; i++) {
-					var elements = wFORMS.behaviors['switch'].getElementsBySwitchName(switches_ON[i]);
+					var elements = wFORMS.behaviors['switch'].getElementsBySwitchName(switches_ON[i], formId);
 					for(var j=0;j<elements.length;j++) {
 						// An element with the REPEAT behavior limits the scope of switches 
 						// targets outside of the scope of the switch are not affected. 
@@ -234,11 +263,15 @@
 		   // ------------------------------------------------------------------------------------------
            // clear: executed if the behavior should not be applied anymore
 		   // ------------------------------------------------------------------------------------------
-		   clear: function(e) {
+		   clear: function(form) {
              	// @TODO: go through wFORMS.switchTriggers to remove events.
-             	wFORMS.switchTriggers = {};		
-             	wFORMS.switchTargets = {};
-             	
+             	if(form) {
+	             	wFORMS.switchTriggers[form] = [];		
+    	         	wFORMS.switchTargets[form] = [];
+             	} else {
+             		wFORMS.switchTriggers = [];	
+             		wFORMS.switchTargets = [];
+             	}
            },
 		   
 		   
@@ -278,11 +311,11 @@
 			},
 			
 			// ------------------------------------------------------------------------------------------
-			getElementsBySwitchName: function(switchName) {
+			getElementsBySwitchName: function(switchName, formId) {
 				var elements = new Array();
-				if(wFORMS.switchTargets[switchName]) {
-					for (var i=0; i<wFORMS.switchTargets[switchName].length; i++) {
-						var element = document.getElementById(wFORMS.switchTargets[switchName][i]);
+				if(wFORMS.switchTargets[formId][switchName]) {
+					for (var i=0; i<wFORMS.switchTargets[formId][switchName].length; i++) {
+						var element = document.getElementById(wFORMS.switchTargets[formId][switchName][i]);
 						if(element)
 							elements.push(element);
 					}

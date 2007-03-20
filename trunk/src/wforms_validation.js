@@ -6,7 +6,7 @@
 		// Component properties 
 		// wFORMS.functionName_formValidation  is defined at the bottom of this file
 		// Those should be moved inside wFORMS.behaviors['validation']. Stays here for now for backward compatibility
-       	wFORMS.preventSubmissionOnEnter   		= false; 			// prevents submission when pressing the 'enter' key. Set to true if pagination behavior is used.
+       	wFORMS.preventSubmissionOnEnter   		= true; 			// prevents submission when pressing the 'enter' key. Set to true if pagination behavior is used.
 	   	wFORMS.showAlertOnError 			  	= true; 			// sets to false to not show the alert when a validation error occurs.
 		wFORMS.className_required 			 	= "required";
 		wFORMS.className_validationError_msg 	= "errMsg";		 
@@ -43,16 +43,31 @@
 		   // evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
 		   // ------------------------------------------------------------------------------------------
 			evaluate: function(node) {
-               if(node.tagName.toUpperCase()=="FORM") {
-				   // functionName_formValidation can be a reference to a function, or a string with the name of the function.
-				   // avoid using typeof
-				   if(wFORMS.functionName_formValidation.toString()==wFORMS.functionName_formValidation) {
-					   // this is a string, not a function
-					   wFORMS.functionName_formValidation = eval(wFORMS.functionName_formValidation);
-				   }
-                   wFORMS.helpers.addEvent(node,'submit',wFORMS.functionName_formValidation);
-				   //wFORMS.debug('validation/evaluate: FORM '+ node.id,3);
-               }
+               	if(node.tagName=="FORM") {
+				   	// functionName_formValidation can be a reference to a function, or a string with the name of the function.
+				   	// avoid using typeof
+				   	if(wFORMS.functionName_formValidation.toString()==wFORMS.functionName_formValidation) {
+					   	// this is a string, not a function
+						wFORMS.functionName_formValidation = eval(wFORMS.functionName_formValidation);
+				   	}
+                   	wFORMS.helpers.addEvent(node,'submit',wFORMS.functionName_formValidation);
+               	}
+               	// Add onkeydown handler on text inputs to prevent form submission when the enter key is pressed
+				if(wFORMS.preventSubmissionOnEnter) { 
+					if(node.tagName=='INPUT') {					
+						if(!node.type || node.type.toLowerCase()=='text' ||
+						                 node.type.toLowerCase()=='password' ||
+						                 node.type.toLowerCase()=='file') {
+							wFORMS.helpers.addEvent(node,'keydown', function(e){
+								var evt = (e) ? e : window.event;
+								if(evt.keyCode==13) {
+									return wFORMS.helpers.preventEvent(evt);
+								}
+							});
+						}
+					}
+				}
+               
            },
 		   // ------------------------------------------------------------------------------------------
            // init: executed once evaluate has been applied to all elements
@@ -73,16 +88,9 @@
 
 				wFORMS.behaviors['validation'].switchedOffFields = [];
 				wFORMS.behaviors['validation'].jumpToErrorOnPage = null;
-
-				// on multi-page forms we need to prevent the submission when the 'enter' key is pressed
-				// (doesn't work in Opera. Further tests needed in IE and Safari)
-				if(wFORMS.preventSubmissionOnEnter) { 
-					if(element.type && element.type.toLowerCase()=='text') 
-						// source element is a text field, the form was submitted with the 'enter' key.
-						return wFORMS.preventEvent(e); 
-				}
+				
 				// make sure we have the form element
-				while (element && element.tagName.toUpperCase() != 'FORM') {
+				while (element && element.tagName != 'FORM') {
 					element = element.parentNode;
 				}		
 				
@@ -123,6 +131,8 @@
 			// validation functions
 			// ------------------------------------------------------------------------------------------
 			validateElement: function(element /*, currentPageOnly, deep */) {
+
+				if(!element) return;
 
 				var deep = arguments.length>2 ? arguments[2] : true;
 				
