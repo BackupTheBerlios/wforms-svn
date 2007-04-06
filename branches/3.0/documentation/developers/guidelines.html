@@ -1,0 +1,40 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>wFORMS Library Development Guidelines</title>
+<style type="text/css">
+	dt { font-weight: bold}
+	dd { margin-bottom: 1em;}
+</style>
+</head>
+<body>
+<h1>wFORMS Library Development Guidelines</h1>
+
+<h2>Source-code Documentation</h2>
+
+<p>Use JSDoc/JavaDoc syntax (see: <a href="http://jsdoc.sourceforge.net/#usage">JSDoc</a>).
+</p>
+
+<h2>Behavior Implementation</h2>
+
+<dl>
+	<dt>Constructor:</dt>
+	<dd>wFORMS.behaviors.<em>behaviorName</em> = function() { ... }</dd>
+	
+	<dt><em>applyTo()</em> method:</dt>
+	<dd>Inspects the given HTML element and its descendant and determine if and where the behavior should apply.
+	Sets event handlers as appropriate to execute <em>this.run()</em>.<br/>
+	
+	wFORMS.behaviors.<em>behaviorName</em>.prototype.<em>applyTo</em> = function(<em>element</em>) { 
+	}
+	</dd>
+	 
+	<dt><em>run()</em> method:</dt>
+	<dd>Executes the behavior<br/>
+	wFORMS.behaviors.validation.prototype.run = function(e, element) { ... }</dd>
+</dl>
+Other methods may be implemented as needed.
+
+</body>
+</html>
