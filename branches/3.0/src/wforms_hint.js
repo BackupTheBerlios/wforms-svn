@@ -4,17 +4,27 @@ if (typeof(wFORMS) == "undefined") {
 }
 /**
  * wForms hint behavior. Show/highlight an HTML element when the associated input gets the focus.
- * @constructor
  */
-wFORMS.behaviors.hint  = function() { }
+wFORMS.behaviors.hint  = { 
+	
+	instance: function(f) {
+		this.behavior = wFORMS.behaviors.hint; 
+		this.target = f;
+	}
+}
 
 /**
+ * Factory Method.
  * Applies the behavior to the given HTML element by setting the appropriate event handlers.
  * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
  */	
-wFORMS.behaviors.hint.prototype.applyTo = function(f) {
+wFORMS.behaviors.hint.applyTo = function(f) {
 	// Use f.matchAll to find elements to which the behavior must be applied.
-	// Add the event listener to trigger this.run()
+	// create a new instance of the behavior:
+	// var b = new wFORMS.behaviors.hint.instance(f);
+	// use addEventListener to trigger b.run()
+	// return b
 }
 
 /**
@@ -22,4 +32,4 @@ wFORMS.behaviors.hint.prototype.applyTo = function(f) {
  * @param {event} e 
  * @param {domElement} element
  */
-wFORMS.behaviors.hint.prototype.run = function(e, element) { }
+wFORMS.behaviors.hint.instance.prototype.run = function(e, element) { }

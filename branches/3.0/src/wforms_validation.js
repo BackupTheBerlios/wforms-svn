@@ -4,12 +4,11 @@ if (typeof(wFORMS) == "undefined") {
 }
 /**
  * wForms validation behavior
- * @constructor
+ * 
  */
 wFORMS.behaviors.validation = {
 
 	rules: {	
-	/* 	Rule Name		Selector 						Check function 			Optional: Custom Fail function,	Custom Pass function */
 		isRequired	: { selector: ".required", 			check: 'validateRequired'}, 
 		isAlpha		: { selector: ".validate-alpha", 	check: 'validateAlpha'},
 		isAlphanum	: { selector: ".validate-alphanum",	check: 'validateAlphanum'}, 
@@ -39,15 +38,16 @@ wFORMS.behaviors.validation = {
 	},
 	
 	instance: function(f) {
-		
 		this.behavior = wFORMS.behaviors.validation; 
 		this.target = f;
 	}
 }
 
 /**
+ * Factory Method
  * Applies the behavior to the given HTML element by setting the appropriate event handlers.
- * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself. 
+ * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
  */	
 wFORMS.behaviors.validation.applyTo = function(f) {
 		

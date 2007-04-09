@@ -5,17 +5,27 @@ if (typeof(wFORMS) == "undefined") {
 /**
  * wForms repeat behavior. 
  * See: http://www.formassembly.com/wForms/v2.0/documentation/examples/repeat.html
- * @constructor
  */
-wFORMS.behaviors.repeat  = function() { }
+wFORMS.behaviors.repeat = {
+	
+	instance: function(f) {
+		this.behavior = wFORMS.behaviors.repeat; 
+		this.target = f;
+	}
+}
 
 /**
+ * Factory Method.
  * Applies the behavior to the given HTML element by setting the appropriate event handlers.
  * @param {domElement} f An HTML element, either nested inside a FORM element or (preferably) the FORM element itself.
+ * @return {object} an instance of the behavior 
  */	
-wFORMS.behaviors.repeat.prototype.applyTo = function(f) {
+wFORMS.behaviors.repeat.applyTo = function(f) {
 	// Use f.matchAll to find elements to which the behavior must be applied.
-	// Add the event listener to trigger this.run()
+	// create a new instance of the behavior:
+	// var b = new wFORMS.behaviors.hint.instance(f);
+	// use addEventListener to trigger b.run()
+	// return b
 }
 
 /**
@@ -23,4 +33,4 @@ wFORMS.behaviors.repeat.prototype.applyTo = function(f) {
  * @param {event} e 
  * @param {domElement} element
  */
-wFORMS.behaviors.repeat.prototype.run = function(e, element) { }
+wFORMS.behaviors.repeat.instance.prototype.run = function(e, element) { }
