@@ -27,8 +27,7 @@ wFORMS.onLoadHandler = function() {
 
 wFORMS.applyBehaviors = function(f) {
 	for(var behaviorName in wFORMS.behaviors) {
-		var b = new wFORMS.behaviors[behaviorName]();
-		b.applyTo(f);
+		var b = wFORMS.behaviors[behaviorName].applyTo(f);
 	}
 }
 

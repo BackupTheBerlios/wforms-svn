@@ -12,6 +12,18 @@
 	<script type="text/javascript" src="../src/wforms_core.js" ></script>  
 	<script type="text/javascript" src="../src/wforms_validation.js" ></script> 
    
+    <script type="text/javascript">
+    	debugger;
+     	wFORMS.behaviors.validation.rules.isPostCode = { 
+     		selector: 	".validate-postcode", 
+	    	check: 		function(element,value) {
+				    		debugger; 
+				    		if(value) return value.match(/\d\d\d\d\d/); 
+				    		return false; 
+				    	}
+		}
+		wFORMS.behaviors.validation.messages.isPostCode = "failed";
+    </script>
   
    <style type="text/css">
    	dt { 
@@ -73,7 +85,7 @@
 	<pre>&lt;input type="text" ... class="<b>required</b>"/&gt;</pre> 
 	<form>
     <label for="text1" class="preField">Example: </label>
-    <input type="text"  name="text1" value="" size="" class="required"/>
+    <input type="text"  name="text1" value="" size="" class="required validate-postcode"/>
     <input type="submit" class="primaryAction" value="submit"/>   
     </form>  
 	<p>You may use <em>required</em> in combination with any other class. For instance, </p>
