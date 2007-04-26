@@ -77,13 +77,16 @@ wFORMS.behaviors.validation.applyTo = function(f) {
  * @param {domElement} element
  */
 wFORMS.behaviors.validation.instance.prototype.run = function(e, element) { 
-	
  	var errorCount = 0;
  	for (var ruleName in this.behavior.rules) {
  		var rule = this.behavior.rules[ruleName];
    		var self = this;
  		
  		element.matchAll(rule.selector).forEach(function(element) { 
+			console.log(element);
+			e.preventDefault?e.preventDefault():e.returnValue = false;
+		 	return false;
+		 		
 		
  			// remove existing error message if any.
 			self.removeErrorMessage(element);

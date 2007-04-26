@@ -1,0 +1,45 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<title>wForms server-side form validation</title>
+<script type="text/javascript" src="../../src/lib/base2-dom-fp.js" ></script>
+<script type="text/javascript" src="../../src/wforms_core.js" ></script>
+<script type="text/javascript" src="../../src/wforms_validation.js" ></script>
+<script type="text/javascript" src="wforms_customization_ssvalid.js"></script>
+</head>
+
+<body>
+
+<form action="succes.html" method="post" id="myForm">
+
+<table width="100%" cellpadding="0" cellspacing="0">
+    	<tr>
+        	<td colspan="2">
+				<div id="alertMessagePlaceHolder"> </div>
+			</td>
+      	</tr>
+		<tr>
+			<td>UserName:
+			</td>
+			<td><input type="text" name="UserName" id="UserName"  value="" class="validate-ServerSide validation.php?test=validateUserName "/>
+			</td>
+		</tr>
+		
+		<tr>
+			<td>BirthDay:
+			</td>
+			<td><input type="text" name="BirthDay" id="BirthDay" maxlength="10" size="10" value="" class="validate-date required"/>
+			</td>
+		</tr>
+		<tr>
+			
+			<td><input type="submit" name="submit" id="submit"  value="submit"/>
+			</td>
+		</tr>
+</table>
+		
+	  
+</form>
+</body>
+</html>
