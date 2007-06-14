@@ -29,6 +29,7 @@
 
 			onRepeat: null, /* Function to run after the element is repeated */
 			onRemove: null, /* Function to run after the element is removed  */
+			allowRepeat: null, /* Function for fine control on repeatable section */
 			
 		   	// ------------------------------------------------------------------------------------------
 		   	// evaluate: check if the behavior applies to the given node. Adds event handlers if appropriate
@@ -46,13 +47,8 @@
 					var repeatLink = document.getElementById(node.id + wFORMS.idSuffix_duplicateLink);
 					if(!repeatLink) {				
 						// create the repeat link
-						repeatLink   = document.createElement("a"); 
-						var spanNode = document.createElement("span");  // could be used for CSS image replacement 
-						var textNode = document.createTextNode(wFORMS.arrMsg[0]);
-						repeatLink.setAttribute('href',"#");	
-						repeatLink.className = wFORMS.className_duplicateLink;			
-						repeatLink.setAttribute('title', wFORMS.arrMsg[1]);	
-						repeatLink.setAttribute('id',    node.id + wFORMS.idSuffix_duplicateLink);
+						repeatLink = wFORMS.behaviors['repeat'].createRepeatLink(node.id);
+												
 						// find where to insert the link
 						if(node.tagName.toUpperCase()=="TR") {
 							// find the last TD
@@ -64,9 +60,6 @@
 							// Else Couldn't find the TD. Table row malformed ?
 						} else
 							node.appendChild(repeatLink);
-							
-						spanNode.appendChild(textNode); 
-						repeatLink.appendChild(spanNode); 
 					}
 					// Add hidden counter field if necessary
 					var counterField = document.getElementById(node.id + wFORMS.idSuffix_repeatCounter);
@@ -105,14 +98,7 @@
 		 	  	// ------------------------------------------------------------------------------------------
 				// Removeable element
 				if(wFORMS.helpers.hasClass(node, wFORMS.className_delete)) {
-
-					var removeLink = document.createElement("a");
-					var spanNode   = document.createElement("span");  // could be used for CSS image replacement 
-					var textNode   = document.createTextNode(wFORMS.arrMsg[2]);
-					removeLink.setAttribute('href',"#");	
-					removeLink.className = wFORMS.className_removeLink;
-					removeLink.setAttribute('title',wFORMS.arrMsg[3]);	
-					removeLink.setAttribute('id',node.id+wFORMS.idSuffix_removeLink);					
+					var removeLink = wFORMS.behaviors['repeat'].createRemoveLink();
 					// find where to insert the link
 					if(node.tagName.toUpperCase()=="TR") {
 						// find the last TD
@@ -124,11 +110,31 @@
 						// Else Couldn't find the TD. Table row malformed ?
 					} else
 						node.appendChild(removeLink);
+				}	
+           	},
+			createRepeatLink: function(id) {
+				var repeatLink = document.createElement("a"); 
+				var spanNode = document.createElement("span");  // could be used for CSS image replacement 
+				var textNode = document.createTextNode(wFORMS.arrMsg[0]);
+				repeatLink.id = id + wFORMS.idSuffix_duplicateLink;	
+				repeatLink.setAttribute('href',"#");	
+				repeatLink.className = wFORMS.className_duplicateLink;			
+				repeatLink.setAttribute('title', wFORMS.arrMsg[1]);	
 					spanNode.appendChild(textNode); 
+				repeatLink.appendChild(spanNode); 
+				return repeatLink;
+			},
+			createRemoveLink: function() {
+				var removeLink = document.createElement("a");
+				var spanNode   = document.createElement("span");  // could be used for CSS image replacement 
+				var textNode   = document.createTextNode(wFORMS.arrMsg[2]);
+				removeLink.setAttribute('href',"#");	
+				removeLink.className = wFORMS.className_removeLink;
+				removeLink.setAttribute('title',wFORMS.arrMsg[3]);	
+				spanNode.appendChild(textNode); 
 					removeLink.appendChild(spanNode); 	
 					wFORMS.helpers.addEvent(removeLink,'click',wFORMS.behaviors['repeat'].removeFieldGroup);
-				}	
-
+				return removeLink;
            	},
 
 		   	duplicateFieldGroup: function(e) {
@@ -140,12 +146,23 @@
 				var preserveRadioName = wFORMS.helpers.hasClass(element,wFORMS.className_preserveRadioName) ? true : wFORMS.preserveRadioName;
 				//wFORMS.debug('preserveRadioName='+preserveRadioName);
 				
-				// Get Element to duplicate.
-				var element = element.parentNode;
-				while (element && !wFORMS.helpers.hasClass(element,wFORMS.className_repeat)) {
+				while (element && !wFORMS.helpers.hasClass(element,wFORMS.className_duplicateLink)) {
 					element = element.parentNode;
 				}	
+				var idOfRepeatedSection = element.id.replace(wFORMS.idSuffix_duplicateLink,"");
+				
+				var duplink = element;
+				var element = document.getElementById(idOfRepeatedSection); 
+				
+				
 				if (element) {
+					var wBehavior = wFORMS.behaviors['repeat']; // shortcut
+					
+					// Check if we have a custom function that prevents the repeat
+					if(wBehavior.allowRepeat) {						
+						if(!wBehavior.allowRepeat(element)) return false;
+					}
+					
 					// Extract row counter information
 					counterField = document.getElementById(element.id + wFORMS.idSuffix_repeatCounter);
 					if(!counterField) return; // should not happen.
@@ -158,14 +175,14 @@
 						var maxRow = 9999;
 					
 					if (rowCount < maxRow) 
-						this.className=wFORMS.className_duplicateLink;
+						duplink.className=wFORMS.className_duplicateLink;
 					else 								
-						this.className=wFORMS.className_duplicateLinkHidden;
+						duplink.className=wFORMS.className_duplicateLinkHidden;
 
 					// Prepare id suffix
 					var suffix = "-" + rowCount.toString()
 					// duplicate node tree 
-					var dupTree = wFORMS.behaviors['repeat'].replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
+					var dupTree = wBehavior.replicateTree(element, null, suffix, preserveRadioName);  //  sourceNode.cloneNode(true); 
 					// find insert point in DOM tree (after existing repeated element)
 					var insertNode = element.nextSibling;
 					
@@ -185,8 +202,8 @@
 					// re-add wFORMS behaviors
 					wFORMS.addBehaviors(dupTree);					
 					
-					if(wFORMS.behaviors['repeat'].onRepeat)
-						wFORMS.behaviors['repeat'].onRepeat(element,dupTree);
+					if(wBehavior.onRepeat)
+						wBehavior.onRepeat(element,dupTree);
 				}
 				return wFORMS.helpers.preventEvent(e);
 			},
