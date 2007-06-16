@@ -164,7 +164,8 @@
            run: function(e) {
                 var element   = wFORMS.helpers.getSourceElement(e);
 				if(!element) element = e;
-			    //wFORMS.debug('switch/run: ' + element.id , 5);	
+			  	
+			  	var preventEvent = false;
 				
 				if(element.form)
 					var form = element.form;
@@ -216,6 +217,18 @@
 						}
 						break;
 					default:
+						if(!wFORMS.behaviors['switch'].isTriggerOn(element))
+							switches_ON  = switches_ON.concat(wFORMS.behaviors['switch'].getSwitchNames(element));
+						else
+							switches_OFF = switches_OFF.concat(wFORMS.behaviors['switch'].getSwitchNames(element));
+						
+						// For  elements that don't have a native state variable (like checked, or selectedIndex)
+						if(wFORMS.helpers.hasClass(element, wFORMS.className_switchIsOff)) {
+							element.className = element.className.replace(wFORMS.className_switchIsOff, wFORMS.className_switchIsOn);
+						} else if(wFORMS.helpers.hasClass(element, wFORMS.className_switchIsOn)) {
+							element.className = element.className.replace(wFORMS.className_switchIsOn, wFORMS.className_switchIsOff);
+						}
+						preventEvent = true;
 						break;
 				}
 				
@@ -258,6 +271,8 @@
 						}
 					}
 				}
+				if(preventEvent)
+					return wFORMS.helpers.preventEvent(e); 
            },
 
 		   // ------------------------------------------------------------------------------------------
@@ -301,13 +316,7 @@
 				if(!element || element.nodeType != 1) return;
 				if(element.className) {  		
 					element.className = element.className.replace(oldStateClass, newStateClass);
-				}		
-				// For  elements that don't have a native state variable (like checked, or selectedIndex)
-				if(wFORMS.helpers.hasClass(element, wFORMS.className_switchIsOff)) {
-					element.className = element.className.replace(wFORMS.className_switchIsOff, wFORMS.className_switchIsOn);
-				} else if(wFORMS.helpers.hasClass(element, wFORMS.className_switchIsOn)) {
-					element.className = element.className.replace(wFORMS.className_switchIsOn, wFORMS.className_switchIsOff);
-				}
+				}						
 			},
 			
 			// ------------------------------------------------------------------------------------------
