@@ -1,6 +1,6 @@
-﻿// Localization for wForms - a javascript extension to web forms.
-// Czech v2.0 - July 18th 2006
-// Thanks to Martin Jon
+// Localization for wForms - a javascript extension to web forms.
+// Icelandic - June 2007
+// Thanks to Hafsteinn M. Másson
 // This software is licensed under the CC-GNU LGPL <http://creativecommons.org/licenses/LGPL/2.1/>
 //
 // See http://formassembly.com/blog/how-to-localize-wforms/
@@ -8,35 +8,35 @@
 // Example: 
 // <head>...
 // <script type="text/javascript" src="wforms.js" ></script>
-// <script type="text/javascript" src="localization-cz.js" ></script>
+// <script type="text/javascript" src="localization-is.js" ></script>
 // </head>
 
-wFORMS.behaviors['validation'].errMsg_required     = "Toto pole je povinn."; // required
-wFORMS.behaviors['validation'].errMsg_alpha        = "V textu nejsou povoleny cslice."; // no numbers 
-wFORMS.behaviors['validation'].errMsg_email        = "Toto nen sprvn e-mailov adresa."; // validate email 
-wFORMS.behaviors['validation'].errMsg_integer      = "Zadejte cslo."; // integer 
-wFORMS.behaviors['validation'].errMsg_float        = "VZadejte desetin cslo."; // float 
+wFORMS.behaviors['validation'].errMsg_required     = "Nauðsynlegt er að fylla út þennan reit."; // required
+wFORMS.behaviors['validation'].errMsg_alpha        = "Texti má aðeins innihalda stafi (a-z, A-Z). Tölustafir eru ekki leyfðir."; // no numbers 
+wFORMS.behaviors['validation'].errMsg_email        = "Netfang er ekki rétt slegið inn."; // validate email 
+wFORMS.behaviors['validation'].errMsg_integer      = "Ritaðu inn heiltölu."; // integer 
+wFORMS.behaviors['validation'].errMsg_float        = "Ritaðu inn flot (t.d. 1.9)."; // float 
 wFORMS.behaviors['validation'].errMsg_password     = ""; // password
-wFORMS.behaviors['validation'].errMsg_alphanum     = "Pouijte pouze psmena (A-Z) a csla (0-9)."; // alphanumeric
-wFORMS.behaviors['validation'].errMsg_date         = "Zadejte sprvn datum."; // date
-wFORMS.behaviors['validation'].errMsg_notification = "%% error(s) detected. Your form has not been submitted yet.\nPlease check the information you provided."; // %% errors.
+wFORMS.behaviors['validation'].errMsg_alphanum     = "Aðeins má nota hefðbundna stafi eða tölustafi (a-z, 0-9)."; // alphanumeric
+wFORMS.behaviors['validation'].errMsg_date         = "Dagsetning ekki rétt slegið inn."; // date
+wFORMS.behaviors['validation'].errMsg_notification = "%% villur fundust. Eyðublaðið hefur ekki enn verið sent. Gakktu úr skugga um að allar upplýsingar séu rétt slegnar inn."; // %% errors.
 
-wf.arrMsg[0] = "Add another response"; // repeat row
+wf.arrMsg[0] = "Bæta við svari"; // repeat row
 wf.arrMsg[1] = "" // repeat row title 
-wf.arrMsg[2] = "Remove"; // remove row
+wf.arrMsg[2] = "Fjarlægja"; // remove row
 wf.arrMsg[3] = "" // remove row title
-wf.arrMsg[4] = "Next Page";
-wf.arrMsg[5] = "Previous Page";
+wf.arrMsg[4] = "Næsta síða";
+wf.arrMsg[5] = "Fyrri síða";
 
 
 // Alpha-Numeric Input Validation: 
 wf.isAlpha = function(s) {
-	var reg = /^[\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/; 
+	var reg = /^[\u0041-\u007A\u00C0-\u00FF]+$/; 
 	return this.isEmpty(s) || reg.test(s);
 }
 
 wf.isAlphaNum = function(s) {
-	var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF\u0100-\u017F]+$/;
+	var reg = /^[\u0030-\u0039\u0041-\u007A\u00C0-\u00FF]+$/;
 	return this.isEmpty(s) || reg.test(s);
 }
 // Unicode ranges (from http://www.unicode.org/) :
