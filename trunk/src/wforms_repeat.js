@@ -246,10 +246,10 @@
 						if(element.type) {
 							tagHtml += " TYPE='" + element.type + "' ";
 						}
-						if(element.selected) 
-							tagHtml += " SELECTED='SELECTED' ";
-						if(element.checked)
-							tagHtml += " CHECKED='CHECKED' ";
+					//	if(element.selected) 
+					//		tagHtml += " SELECTED='SELECTED' ";
+					//	if(element.checked)
+					//		tagHtml += " CHECKED='CHECKED' ";
 	
 						if(navigator.appVersion.indexOf("MSIE") != -1 && navigator.appVersion.indexOf("Windows") == -1) // IE5 Mac
 							var newElement = document.createElement(tagHtml);
@@ -307,6 +307,14 @@
 							}
 							// Create attribute and assign value
 							switch(attribute.nodeName.toLowerCase()) {
+								case "checked":
+									// skip checked attribute
+									newElement.checked = false;
+									break;
+								case "selected":
+									// skip selected attribute
+									newElement.selected = false;
+									break;
 								case "class":
 									newElement.className = value; 
 									break;
