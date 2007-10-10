@@ -1,0 +1,105 @@
+/** BEGIN: Hint behavior */
+
+.field-hint-inactive {
+	color: #AAA;
+	display: none;
+	position: absolute;
+}
+
+.field-hint {
+	color: #555;
+	margin-top: 2px;
+	border:1px solid #AAA;
+	background-color: #FFF;
+	position: absolute;
+	display:block;
+	z-index: 900;
+}
+
+/** END: Hint behavior */
+
+
+
+/** BEGIN: Switch behavior */
+.swtchIsOn {
+	color: green;
+}
+.swtchIsOff {
+	color: red;
+}
+
+.switch-a{
+}
+.switch-b{
+}
+.switch-c{
+}
+
+/* Switch Behavior Classes */
+.onstate-a,  .onstate-b,  .onstate-c,  .onstate-d,
+.onstate-e,  .onstate-f,  .onstate-g,  .onstate-h, 
+.onstate-i,  .onstate-j,  .onstate-k,  .onstate-l, 
+.onstate-m,  .onstate-n,  .onstate-o,  .onstate-p, 
+.onstate-q,  .onstate-r,  .onstate-s,  .onstate-t,
+.onstate-u,  .onstate-v,  .onstate-w,  .onstate-x,  
+.onstate-y,  .onstate-z,  .onstate-aa, .onstate-ab,
+.onstate-ac, .onstate-ad, .onstate-ae, .onstate-af,
+.onstate-ag, .onstate-ah, .onstate-ai, .onstate-aj,
+.onstate-ak, .onstate-al, .onstate-am, .onstate-an {
+	display: block;
+}
+
+
+/* Switch Behavior Classes */
+.offstate-a,  .offstate-b,  .offstate-c,  .offstate-d,
+.offstate-e,  .offstate-f,  .offstate-g,  .offstate-h, 
+.offstate-i,  .offstate-j,  .offstate-k,  .offstate-l, 
+.offstate-m,  .offstate-n,  .offstate-o,  .offstate-p, 
+.offstate-q,  .offstate-r,  .offstate-s,  .offstate-t,
+.offstate-u,  .offstate-v,  .offstate-w,  .offstate-x,  
+.offstate-y,  .offstate-z,  .offstate-aa, .offstate-ab,
+.offstate-ac, .offstate-ad, .offstate-ae, .offstate-af,
+.offstate-ag, .offstate-ah, .offstate-ai, .offstate-aj,
+.offstate-ak, .offstate-al, .offstate-am, .offstate-an {
+	display: none;
+}
+
+
+/** END: Switch behavior */
+
+
+
+/** BEGIN: Repeat behavior */
+.removeable{
+	background-color:#EEE;
+}
+
+.repeat{
+}
+
+.duplicateLink{
+	font-size:11;
+	font-family:Verdana;
+}
+
+.removeLink{
+	font-size:11;
+	font-family:Verdana;
+}
+
+
+
+
+/** END: Repeat behavior */
+
+
+/** BEGIN: Paging behavior */
+
+.wfPage, .wfHideSubmit { 
+	display: none;
+}
+
+.wfCurrentPage {
+	display: block;
+}
+/** END: Paging behavior */
