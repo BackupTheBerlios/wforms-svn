@@ -39,7 +39,7 @@ wFORMS.behaviors.calculation  = {
 		this.behavior = wFORMS.behaviors.calculation; 
 		this.target = f;
 		this.calculations = [];
-		this.variables = [];
+		//this.variables = [];
 	}
 }
 
@@ -59,9 +59,7 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 			// extract formula
 			var formula = elem.className.substr(elem.className.indexOf('formula=')+8).split(' ')[0];
 
-			// [don] Safari 1.2 workaround
 			var variables = formula.split(/[^a-zA-Z]+/g);
-//			var variables = formula.split(/[^\w]+/gi);
 			b.varFields = [];
 			
 			// process variables, add onchange/onblur event to update total.
@@ -69,7 +67,11 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 				if(variables[i]!='') {
 					f.matchAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+"\"]").forEach(
 						function(variable){
-							//console.log('variable:',variable, variable.tagName + ":" + variable.getAttribute('type'));
+							
+							// make sure the variable is an exact match.
+							var exactMatch = ((' ' + variable.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+variables[i]+' ')!=-1);
+							if(!exactMatch) return;
+							
 							switch(variable.tagName + ":" + variable.getAttribute('type') ) {
 								case 'INPUT:':			// (type attribute empty)
 								case 'INPUT:null': 		// (type attribute missing)
@@ -110,9 +112,17 @@ wFORMS.behaviors.calculation.applyTo = function(f) {
 			b.compute(calc);
 		}
 	);
-
+	
+	b.onApply();
+	
 	return b;
 }
+
+/**
+ * Executed once the behavior has been applied to the document.
+ * Can be overwritten.
+ */
+wFORMS.behaviors.calculation.instance.prototype.onApply = function() {} 
 
 /**
  * Runs when a field is changed, update dependent calculated fields. 
@@ -123,7 +133,8 @@ wFORMS.behaviors.calculation.instance.prototype.run = function(event, element) {
 	
 	for(var i=0; i<this.calculations.length;i++) {		
 		var calc = this.calculations[i];
-		for(var j=0; j<calc.variables.length;j++) {				
+		for(var j=0; j<calc.variables.length;j++) {		
+					
 			if(element==calc.variables[j].field) {
 				// this element is part of the calculation for calc.field
 				this.compute(calc);
@@ -146,13 +157,21 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 		// TODO: Exclude switched-off variables?
 		f.matchAll("*[class*=\""+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+"\"]").forEach(
 			function(f){
+				
+				// make sure the variable is an exact match.
+				var exactMatch = ((' ' + f.className + ' ').indexOf(' '+wFORMS.behaviors.calculation.VARIABLE_SELECTOR_PREFIX+v.name+' ')!=-1);
+				if(!exactMatch) return;
+				
 				// If field value has a different purpose, the value for the calculation can be set in the
-				// class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX 
-				var value = _self.getValueFromClassName(f);				
-				if(!value)
-					value = wFORMS.helpers.getFieldValue(f);
+				// class attribute, prefixed with CHOICE_VALUE_SELECTOR_PREFIX
+				if(_self.hasValueInClassName(f)) {
+					var value = _self.getValueFromClassName(f);
+				} else {
+					var value = wFORMS.helpers.getFieldValue(f);					
+				}
+				
 				if(!value) value=0;
-					
+				
 				if(value.constructor.toString().indexOf("Array") !== -1) { // array (multiple select)
 					for(var j=0;j<value.length;j++) { 
 						varval += parseFloat(value[j]);
@@ -162,9 +181,10 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 				}
 			}
 		);		
-	    var rgx = new RegExp("[^a-z]?("+v.name+")[^a-z]?","gi");
-	   
-	    var m = rgx.exec(formula);
+		
+	    var rgx = new RegExp("[^a-z]+("+v.name+")[^a-z]+","gi");
+	    
+	    var m = rgx.exec(' '+formula+' ');
 	    if (m) {
 	    	if(m[1])
 				formula = formula.replace(m[1], varval);
@@ -197,13 +217,30 @@ wFORMS.behaviors.calculation.instance.prototype.compute = function(calculation) 
 	}
 	calculation.field.value = result;
 	
-	// If the calcualted field is aslo a variable, recursively update dependant calculations
+	// If the calcualted field is also a variable, recursively update dependant calculations
 	if(calculation.field.className && (calculation.field.className.indexOf(this.behavior.VARIABLE_SELECTOR_PREFIX)!=-1)) {
 		// TODO: Check for infinite loops?
 		this.run(null,calculation.field);
 	} 
 }
 	
+wFORMS.behaviors.calculation.instance.prototype.hasValueInClassName = function(element) {
+	switch(element.tagName) {
+		case "SELECT": 
+			for(var i=0;i<element.options.length;i++) {
+				if(element.options[i].className && element.options[i].className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)!=-1) {
+					return true; 
+				}
+			}
+			return false; 
+			break;
+		default:
+			if(!element.className || (' '+element.className).indexOf(' '+this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1)
+				return false;
+			break;
+	}
+	return true;
+}
 /**
  * getValueFromClassName 
  * If field value has a different purpose, the value for the calculation can be set in the
@@ -216,6 +253,7 @@ wFORMS.behaviors.calculation.instance.prototype.getValueFromClassName = function
 		case "INPUT":
 			if(!element.className || element.className.indexOf(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)==-1) 
 				return null;
+			
 			var value = element.className.split(this.behavior.CHOICE_VALUE_SELECTOR_PREFIX)[1].split(' ')[0];								
 			if(element.type=='checkbox')
 				return element.checked?value:null;
