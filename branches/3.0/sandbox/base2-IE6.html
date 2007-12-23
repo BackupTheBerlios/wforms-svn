@@ -3,23 +3,17 @@
 <head>
 	<title>Test base2 IE6</title>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>	
-	<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0(beta)/base2-p.js"></script>
-	<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0(beta)/base2-dom-p.js"></script>
+	<script type="text/javascript" src="http://base2.googlecode.com/svn/version/1.0(beta)/base2-dom-fp.js"></script>
 	<script type="text/javascript">
-		
-		function checkCreateElement() {
-			var elem = document.createElement('p');
-			if(!elem) {
-				alert('fail');
-			} else {
-				alert('ok');
-			}
-		}
 		base2.DOM.bind(document);
-		document.addEventListener('DOMContentLoaded', checkCreateElement,false);
+		var elem = document.createElement('p');
+		if(!elem) {
+			alert('fail');
+		} else {
+			alert('ok');
+		}
 	</script>
 </head>
-<body>
-	
+<body>	
 </body>
 </html>
