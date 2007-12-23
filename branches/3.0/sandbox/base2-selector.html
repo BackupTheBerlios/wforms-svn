@@ -29,7 +29,7 @@
 &lt;script type="text/javascript"&gt;
 base2.DOM.bind(document);
 try {
-	document.matchAll('*[title="One\'s title"]').forEach(
+	document.querySelectorAll('*[title="One\'s title"]').forEach(
 		function(elem){ alert(element.getAttribute('title')); }
 	);
 } catch(x) {
